@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBA Projetos COPASA - Prof. Thiago Lima</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .nav-active { background-color: #1e293b; border-left: 4px solid #3b82f6; color: #3b82f6 !important; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .waste-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: all 0.3s; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+    <aside class="w-72 bg-slate-900 text-slate-300 flex flex-col shadow-2xl z-20 hidden lg:flex">
+        <div class="p-8 border-b border-slate-800">
+            <div class="text-blue-500 font-bold text-xs tracking-widest uppercase mb-1">MBA Projetos</div>
+            <h1 class="text-white text-xl font-extrabold leading-tight">Prof. Thiago Lima</h1>
+            <div class="flex items-center mt-3 bg-blue-900/30 px-2 py-1 rounded text-[10px] text-blue-400 font-semibold w-fit">💧 COPASA - MG</div>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-6">
+            <ul class="space-y-1">
+                <li><button onclick="nav('home')" id="btn-home" class="nav-btn w-full text-left px-6 py-3 hover:text-white transition-all flex items-center gap-3">🏠 Home</button></li>
+                <li><button onclick="nav('culture')" id="btn-culture" class="nav-btn w-full text-left px-6 py-3 hover:text-white transition-all flex items-center gap-3">🧩 Cultura Lean</button></li>
+                <li><button onclick="nav('vsm')" id="btn-vsm" class="nav-btn w-full text-left px-6 py-3 hover:text-white transition-all flex items-center gap-3">🗺️ Simulador VSM</button></li>
+                <li><button onclick="nav('root')" id="btn-root" class="nav-btn w-full text-left px-6 py-3 hover:text-white transition-all flex items-center gap-3">🔍 Causa Raiz</button></li>
+                <li><button onclick="nav('about')" id="btn-about" class="nav-btn w-full text-left px-6 py-3 hover:text-white transition-all flex items-center gap-3">👨‍🏫 Sobre</button></li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="flex-1 overflow-y-auto"><div id="app-container" class="max-w-6xl mx-auto p-6 md:p-12"></div></main>
+    <script>
+        const wastes = [
+            { title: 'Transporte', icon: '🚛', desc: 'Movimentação sem valor.', example: 'Tubos sem rota definida.' },
+            { title: 'Estoque', icon: '📦', desc: 'Excesso de insumos.', example: 'Hidrômetros parados.' },
+            { title: 'Espera', icon: '⏳', desc: 'Tempo ocioso.', example: 'Equipe aguardando liberação.' },
+            { title: 'Defeitos', icon: '❌', desc: 'Erros e retrabalho.', example: 'Vazamento em rede nova.' }
+        ];
+        function nav(page) {
+            const container = document.getElementById('app-container');
+            container.innerHTML = '';
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active', 'text-white'));
+            const activeBtn = document.getElementById(`btn-${page}`);
+            if(activeBtn) activeBtn.classList.add('nav-active', 'text-white');
+            const section = document.createElement('div');
+            section.className = 'fade-in';
+            if(page==='home') renderHome(section);
+            if(page==='culture') renderCulture(section);
+            if(page==='vsm') renderVSM(section);
+            if(page==='root') renderRoot(section);
+            if(page==='about') renderAbout(section);
+            container.appendChild(section);
+        }
+        function renderHome(el) {
+            el.innerHTML = `<h2 class="text-4xl font-black mb-4">Excelência Operacional</h2><p class="text-xl text-slate-600 mb-8">MBA Gestão de Projetos Lean - Prof. Thiago Lima</p><div class="bg-blue-600 p-10 rounded-3xl text-white shadow-xl"><h3>Portal do Aluno</h3><p class="mt-4">Unindo MIT Sloan e a prática na COPASA.</p></div>`;
+        }
+        function renderCulture(el) {
+            el.innerHTML = `<h2 class="text-3xl font-bold mb-8">8 Desperdícios</h2><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">${wastes.map(w => `<div class="waste-card bg-white p-6 rounded-2xl border shadow-sm"><div class="text-4xl mb-4">${w.icon}</div><h3 class="font-bold">${w.title}</h3><p class="text-xs text-slate-500">${w.desc}</p><p class="text-xs italic mt-2 text-blue-600">${w.example}</p></div>`).join('')}</div>`;
+        }
+        function renderVSM(el) {
+            el.innerHTML = `<h2 class="text-3xl font-bold mb-8 text-center">Simulador PCE</h2><div class="grid grid-cols-1 lg:grid-cols-3 gap-8"><div class="bg-white p-8 rounded-3xl shadow-sm border space-y-4"><label class="block font-bold uppercase text-xs">Tempo VA</label><input type="number" id="va" value="60" oninput="updatePCE()" class="w-full p-4 bg-slate-50 border rounded-xl"><label class="block font-bold uppercase text-xs">Tempo NVA</label><input type="number" id="nva" value="240" oninput="updatePCE()" class="w-full p-4 bg-slate-50 border rounded-xl"></div><div class="lg:col-span-2 bg-white p-12 rounded-3xl shadow-sm border text-center flex flex-col items-center justify-center"><div id="pce-val" class="text-9xl font-black text-blue-600">20.0%</div><p class="mt-4 font-bold uppercase tracking-widest text-slate-400">Eficiência (PCE)</p></div></div>`;
+            setTimeout(updatePCE, 50);
+        }
+        function updatePCE() {
+            const va = parseFloat(document.getElementById('va').value) || 0;
+            const nva = parseFloat(document.getElementById('nva').value) || 0;
+            const total = va + nva;
+            const pce = total > 0 ? (va / total) * 100 : 0;
+            const display = document.getElementById('pce-val');
+            display.innerText = pce.toFixed(1) + '%';
+            display.className = pce > 25 ? 'text-9xl font-black text-emerald-500' : 'text-9xl font-black text-blue-600';
+        }
+        function renderRoot(el) {
+            el.innerHTML = `<h2 class="text-3xl font-bold mb-8">Causa Raiz</h2><div class="grid grid-cols-1 lg:grid-cols-2 gap-8"><div class="bg-white p-8 rounded-3xl border shadow-sm"><canvas id="pChart" height="300"></canvas></div><div class="bg-slate-900 text-white p-8 rounded-3xl shadow-xl"><h3 class="text-blue-400 font-bold mb-4">5 Porquês</h3><div class="space-y-2 text-sm"><p>1. Obra parada?</p><p>2. Sem material.</p><p>3. Atraso no fornecedor.</p><p>4. Pagamento atrasado.</p><p class="font-bold text-blue-400">5. Erro no processo de conferência.</p></div></div></div>`;
+            setTimeout(() => { new Chart(document.getElementById('pChart'), { type: 'bar', data: { labels: ['A', 'B', 'C', 'D'], datasets: [{ label: 'Erros', data: [50, 25, 15, 10], backgroundColor: '#3b82f6' }] }, options: { responsive: true, maintainAspectRatio: false } }); }, 100);
+        }
+        function renderAbout(el) {
+            el.innerHTML = `<div class="bg-white p-10 rounded-3xl shadow-sm border"> <h2 class="text-3xl font-black mb-6">Prof. Thiago Lima</h2> <p class="text-lg text-slate-600 leading-relaxed mb-6">Pós-Doutorando, Pesquisador e Consultor. Líder Relevante 2024 com imersão no MIT Sloan e Boston Dynamics.</p> <div class="grid grid-cols-2 gap-4"><div class="p-4 bg-slate-50 rounded-xl font-bold text-center">MIT SLOAN</div><div class="p-4 bg-slate-50 rounded-xl font-bold text-center">BOSTON DYNAMICS</div></div></div>`;
+        }
+        window.onload = () => nav('home');
+    </script>
+</body>
+</html>
