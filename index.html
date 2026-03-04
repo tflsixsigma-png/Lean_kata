@@ -3,353 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBA Projetos COPASA - Prof. Thiago Lima</title>
+    <title>MBA Projetos COPASA - Prof. Thiago Lima - Gestão Lean</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-
-        .chart-container {
-            position: relative;
-            width: 100%;
-            height: 320px;
-            max-height: 400px;
-            margin: 0 auto;
-        }
-
-        .custom-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: #1e293b; 
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #475569; 
-            border-radius: 3px;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.4s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .nav-active {
-            background-color: #1e293b;
-            border-left: 4px solid #3b82f6;
-            color: #3b82f6;
-        }
-
-        .waste-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; scroll-behavior: smooth; }
+        .chart-container { position: relative; width: 100%; max-width: 700px; height: 350px; margin: 0 auto; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 1); }
+        .nav-active { background-color: #1e3a8a; color: white; border-right: 4px solid #3b82f6; }
+        .theory-block { border-left: 4px solid #3b82f6; padding-left: 1.5rem; margin-bottom: 2rem; }
+        .step-node { min-width: 140px; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .animate-slide { animation: slideIn 0.3s ease-out forwards; }
     </style>
-    <!-- Chosen Palette: "Profissional COPASA" - Navy Blue, Water Cyan, and Emerald Green -->
+    <!-- Chosen Palette: "Blue Horizon" - Tons de azul profundo (COPASA), azul claro (água) e cinzas profissionais. -->
     <!-- Application Structure Plan: 
-         - Branding: Identificação clara do Prof. Thiago Lima no topo do sidebar e no dashboard.
-         - Navigation: Menu lateral para transição suave entre conceitos teóricos e simulações práticas.
-         - Modules: Cultura (8 desperdícios), VSM (Calculadora de eficiência), Root Cause (Pareto), e Métricas de Projeto.
+         - A ementa foi transformada em uma barra de navegação lógica: Fundamentos, Mapeamento, Solução, Ferramentas e Projetos.
+         - Cada seção contém: 1. Teoria Detalhada; 2. Exemplo no contexto COPASA; 3. Ferramenta Interativa.
+         - Por que esta estrutura: O aluno de MBA precisa do rigor acadêmico (teoria) junto com a aplicação imediata (interatividade).
     -->
     <!-- Visualization & Content Choices:
-         - Dashboard: Boas-vindas personalizada com resumo da ementa.
-         - Cultura Lean: Galeria de cards interativos com exemplos reais do setor de saneamento.
-         - VSM: Fluxograma dinâmico onde o aluno altera tempos de espera e vê a eficiência cair/subir.
-         - Root Cause: Pareto interativo e guia de 5 Porquês focado em engenharia e operações.
-         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+         - Cultura: Grid de Desperdícios interativo para fixação conceitual.
+         - VSM: Simulador de PCE (Process Cycle Efficiency) com entradas dinâmicas e gráfico de barras VA vs NVA.
+         - Root Cause: Ishikawa Diagram (HTML/CSS) e Gráfico de Pareto (Chart.js).
+         - Projetos: Dashboards comparativos de Lead Time.
+         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
     -->
 </head>
-<body class="flex h-screen overflow-hidden text-slate-900">
+<body class="flex h-screen overflow-hidden">
 
-    <!-- Sidebar -->
-    <aside class="w-72 bg-slate-900 text-slate-300 flex flex-col shadow-2xl z-20 hidden lg:flex">
-        <div class="p-8 border-b border-slate-800">
-            <div class="text-blue-500 font-bold text-xs tracking-widest uppercase mb-1">MBA Projetos</div>
-            <h1 class="text-white text-xl font-extrabold leading-tight">Prof. Thiago Lima</h1>
-            <div class="flex items-center mt-3 bg-blue-900/30 px-2 py-1 rounded text-[10px] text-blue-400 font-semibold w-fit">
-                <span class="mr-1">💧</span> COPASA - MINAS GERAIS
-            </div>
+    <!-- SIDEBAR NAV -->
+    <aside class="w-72 bg-slate-900 text-slate-300 hidden md:flex flex-col shadow-2xl">
+        <div class="p-6 bg-blue-900">
+            <div class="text-[10px] font-bold text-blue-300 uppercase tracking-tighter">MBA Gestão de Projetos</div>
+            <h1 class="text-white text-xl font-black">Prof. Thiago Lima</h1>
+            <p class="text-[10px] mt-1 text-blue-200">Disciplina: Metodologia Lean</p>
         </div>
         
-        <nav class="flex-1 overflow-y-auto custom-scroll py-6">
-            <div class="px-6 mb-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Menu Principal</div>
+        <nav class="flex-1 py-6 overflow-y-auto custom-scroll">
+            <div class="px-6 mb-2 text-[10px] font-bold text-slate-500 uppercase">Módulos de Estudo</div>
             <ul class="space-y-1">
-                <li><button onclick="nav('home')" id="btn-home" class="nav-btn w-full text-left px-6 py-3 hover:text-white transition-all flex items-center gap-3"><span>🏠</span> Dashboard Inicial</button></li>
-                <li><button onclick="nav('culture')" id="btn-culture" class="nav-btn w-full text-left px-6 py-3 hover:text-white transition-all flex items-center gap-3"><span>🧩</span> Cultura & 8 Desperdícios</button></li>
-                <li><button onclick="nav('vsm')" id="btn-vsm" class="nav-btn w-full text-left px-6 py-3 hover:text-white transition-all flex items-center gap-3"><span>🗺️</span> Mapeamento (VSM)</button></li>
-                <li><button onclick="nav('root')" id="btn-root" class="nav-btn w-full text-left px-6 py-3 hover:text-white transition-all flex items-center gap-3"><span>🔍</span> Causa Raiz (Pareto)</button></li>
-                <li><button onclick="nav('tools')" id="btn-tools" class="nav-btn w-full text-left px-6 py-3 hover:text-white transition-all flex items-center gap-3"><span>🛠️</span> Ferramentas Lean</button></li>
-                <li><button onclick="nav('projects')" id="btn-projects" class="nav-btn w-full text-left px-6 py-3 hover:text-white transition-all flex items-center gap-3"><span>📈</span> Gestão de Projetos</button></li>
+                <li><button onclick="changeTab('intro')" id="nav-intro" class="nav-btn w-full text-left px-6 py-3 transition-all hover:bg-slate-800 flex items-center gap-3">🏠 Início & Contexto</button></li>
+                <li><button onclick="changeTab('cultura')" id="nav-cultura" class="nav-btn w-full text-left px-6 py-3 transition-all hover:bg-slate-800 flex items-center gap-3">🧠 Cultura & Princípios</button></li>
+                <li><button onclick="changeTab('vsm')" id="nav-vsm" class="nav-btn w-full text-left px-6 py-3 transition-all hover:bg-slate-800 flex items-center gap-3">🗺️ VSM: Fluxo de Valor</button></li>
+                <li><button onclick="changeTab('causa')" id="nav-causa" class="nav-btn w-full text-left px-6 py-3 transition-all hover:bg-slate-800 flex items-center gap-3">🔍 Root Cause Analysis</button></li>
+                <li><button onclick="changeTab('ferramentas')" id="nav-ferramentas" class="nav-btn w-full text-left px-6 py-3 transition-all hover:bg-slate-800 flex items-center gap-3">🛠️ Ferramentas Lean</button></li>
+                <li><button onclick="changeTab('projetos')" id="nav-projetos" class="nav-btn w-full text-left px-6 py-3 transition-all hover:bg-slate-800 flex items-center gap-3">📊 Lean em Projetos</button></li>
             </ul>
         </nav>
         
-        <div class="p-6 border-t border-slate-800">
-            <div class="bg-slate-800 p-4 rounded-lg">
-                <p class="text-[10px] text-slate-400 uppercase font-bold mb-2">Suporte à Disciplina</p>
-                <p class="text-xs italic text-slate-300">"Eficiência não é fazer mais, é eliminar o que não precisa ser feito."</p>
+        <div class="p-6 bg-slate-950 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white text-xs">TL</div>
+            <div>
+                <p class="text-[10px] text-slate-400 font-bold uppercase">Parceria</p>
+                <p class="text-xs text-slate-100">COPASA / MBA Projetos</p>
             </div>
         </div>
     </aside>
 
-    <!-- Mobile Header -->
-    <header class="lg:hidden fixed w-full bg-slate-900 text-white z-50 p-4 flex justify-between items-center shadow-lg">
-        <div>
-            <div class="text-[10px] text-blue-400 font-bold uppercase">MBA Projetos</div>
-            <div class="font-bold">Prof. Thiago Lima</div>
-        </div>
-        <button id="mobile-toggle" class="text-2xl">☰</button>
-    </header>
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 overflow-y-auto" id="scroll-top">
+        <!-- Top Bar -->
+        <header class="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-200 p-4 flex justify-between items-center">
+            <div class="flex items-center gap-3 md:hidden">
+                <span class="text-blue-900 font-bold">MBA Prof. Thiago</span>
+            </div>
+            <div class="text-xs font-medium text-slate-500 hidden md:block">Apostila Interativa v2.1 • Lean na Gestão de Saneamento</div>
+            <div class="flex gap-4">
+                <span class="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">Cultura da Eficiência</span>
+            </div>
+        </header>
 
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="fixed inset-0 bg-slate-900 z-40 hidden flex-col pt-20 p-6 lg:hidden">
-        <button onclick="nav('home'); closeMobile()" class="py-4 border-b border-slate-800 text-left">Dashboard</button>
-        <button onclick="nav('culture'); closeMobile()" class="py-4 border-b border-slate-800 text-left">Cultura Lean</button>
-        <button onclick="nav('vsm'); closeMobile()" class="py-4 border-b border-slate-800 text-left">VSM</button>
-        <button onclick="nav('root'); closeMobile()" class="py-4 border-b border-slate-800 text-left">Causa Raiz</button>
-        <button onclick="nav('tools'); closeMobile()" class="py-4 border-b border-slate-800 text-left">Ferramentas</button>
-        <button onclick="nav('projects'); closeMobile()" class="py-4 text-left">Projetos</button>
-    </div>
-
-    <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto pt-20 lg:pt-0">
-        <div id="app-container" class="max-w-7xl mx-auto p-6 md:p-10">
-            <!-- Dynamic Content Injected Here -->
+        <div id="content-area" class="p-4 md:p-10 max-w-6xl mx-auto">
+            <!-- Content injected by JS -->
         </div>
     </main>
 
     <script>
-        // --- DATA ---
-        const wastes = [
-            { id: 't', title: 'Transporte', icon: '🚛', desc: 'Movimentação de material sem agregar valor.', example: 'Transporte de tubulações entre canteiros distantes sem planejamento.' },
-            { id: 'i', title: 'Estoque', icon: '📦', desc: 'Acúmulo de insumos ou processos parados.', example: 'Excesso de conexões e hidrômetros parados no almoxarifado regional.' },
-            { id: 'm', title: 'Movimentação', icon: '🚶', desc: 'Deslocamento desnecessário de pessoas.', example: 'Técnico indo e voltando à viatura por falta de kit de ferramentas padronizado.' },
-            { id: 'e', title: 'Espera', icon: '⏳', desc: 'Tempo ocioso entre etapas do processo.', example: 'Equipe de recomposição asfáltica esperando liberação do reparo hidráulico.' },
-            { id: 'sp', title: 'Superprodução', icon: '⚙️', desc: 'Produzir mais do que o cliente solicitou.', example: 'Impressão de relatórios de medição em triplicata sem necessidade legal.' },
-            { id: 'spc', title: 'Superprocessamento', icon: '🔬', desc: 'Trabalho extra que não agrega qualidade percebida.', example: 'Exigência de múltiplas assinaturas de gerência para reparos rotineiros.' },
-            { id: 'd', title: 'Defeitos', icon: '❌', desc: 'Erros que geram retrabalho e custos.', example: 'Vazamento em rede recém-implantada por falha na compactação.' },
-            { id: 'h', title: 'Capital Humano', icon: '🧠', desc: 'Subutilização de talentos e ideias.', example: 'Ignorar sugestões dos operadores de ETA/ETE para otimizar o uso de químicos.' }
-        ];
+        // --- State Management ---
+        let currentTab = 'intro';
+        let charts = {};
 
-        // --- NAVIGATION ---
-        function nav(page) {
-            const container = document.getElementById('app-container');
+        // --- Data Mockups ---
+        const theoryData = {
+            intro: {
+                title: "Lean: Filosofia Além das Ferramentas",
+                intro: "O Lean surgiu no Sistema Toyota de Produção e foca na eliminação sistemática de desperdícios para gerar o máximo valor ao cliente.",
+                contexto: "Na COPASA, o 'cliente' é a população mineira. Valor significa: Água tratada com qualidade, continuidade no abastecimento e modicidade tarifária."
+            },
+            cultura: {
+                principios: [
+                    { t: "Valor", d: "Definido pela necessidade do cliente final." },
+                    { t: "Fluxo de Valor", d: "Mapeamento de todas as etapas do processo." },
+                    { t: "Fluxo Contínuo", d: "Fazer o trabalho fluir sem interrupções." },
+                    { t: "Produção Puxada", d: "Só produzir o que foi demandado." },
+                    { t: "Perfeição", d: "Melhoria contínua (Kaizen)." }
+                ],
+                desperdicios: [
+                    { i: "🚚", t: "Transporte", d: "Movimentação desnecessária de materiais/ferramentas entre bases da COPASA." },
+                    { i: "📦", t: "Estoque", d: "Hidrômetros e conexões parados no almoxarifado gerando custo de capital." },
+                    { i: "🚶", t: "Movimento", d: "Técnicos de campo andando excessivamente para pegar peças no caminhão mal organizado." },
+                    { i: "⏳", t: "Espera", d: "Equipe parada aguardando a liberação asfáltica da prefeitura." },
+                    { i: "🏭", t: "Superprodução", d: "Gerar relatórios de medição que não são utilizados pela gestão." },
+                    { i: "🔬", t: "Superprocessamento", d: "Etapas de aprovação burocrática redundantes para pequenos reparos." },
+                    { i: "❌", t: "Defeitos", d: "Vazamento recorrente em rede recém-implantada (retrabalho)." },
+                    { i: "🧠", t: "Conhecimento", d: "Não ouvir as sugestões de melhoria dos operadores de ETE/ETA." }
+                ]
+            }
+        };
+
+        // --- Core Navigation ---
+        function changeTab(tab) {
+            currentTab = tab;
+            const container = document.getElementById('content-area');
             container.innerHTML = '';
             
-            // Highlight active menu
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active', 'text-white'));
-            const activeBtn = document.getElementById(`btn-${page}`);
-            if(activeBtn) activeBtn.classList.add('nav-active', 'text-white');
+            // Clean active states
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active'));
+            const activeNav = document.getElementById(`nav-${tab}`);
+            if (activeNav) activeNav.classList.add('nav-active');
 
             const section = document.createElement('div');
-            section.className = 'fade-in';
-            
-            switch(page) {
-                case 'home': renderHome(section); break;
-                case 'culture': renderCulture(section); break;
+            section.className = 'animate-slide';
+
+            switch(tab) {
+                case 'intro': renderIntro(section); break;
+                case 'cultura': renderCultura(section); break;
                 case 'vsm': renderVSM(section); break;
-                case 'root': renderRoot(section); break;
-                case 'tools': renderTools(section); break;
-                case 'projects': renderProjects(section); break;
+                case 'causa': renderCausa(section); break;
+                case 'ferramentas': renderFerramentas(section); break;
+                case 'projetos': renderProjetos(section); break;
             }
             container.appendChild(section);
+            document.getElementById('scroll-top').scrollTop = 0;
         }
 
-        function renderHome(el) {
+        // --- Render Modules ---
+
+        function renderIntro(el) {
             el.innerHTML = `
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
-                    <div>
-                        <h2 class="text-3xl font-extrabold text-slate-900">Módulo de Gestão Lean</h2>
-                        <p class="text-slate-500 mt-1 text-lg">MBA em Gestão de Projetos - Foco COPASA</p>
+                <div class="mb-10">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-4">${theoryData.intro.title}</h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">${theoryData.intro.intro}</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="glass-card p-6 rounded-3xl border-l-4 border-blue-600 shadow-sm">
+                        <div class="text-blue-600 font-bold mb-2">Mentalidade Lean</div>
+                        <p class="text-sm text-slate-600 italic">"Não é sobre reduzir pessoas, é sobre reduzir o tempo entre o pedido e a entrega (Lead Time)."</p>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-xl">👤</div>
-                        <div>
-                            <div class="text-xs font-bold text-slate-400 uppercase">Instrutor</div>
-                            <div class="font-bold text-slate-800">Prof. Thiago Lima</div>
-                        </div>
+                    <div class="glass-card p-6 rounded-3xl border-l-4 border-emerald-500 shadow-sm">
+                        <div class="text-emerald-600 font-bold mb-2">Visão Prof. Thiago</div>
+                        <p class="text-sm text-slate-600">Nosso foco no MBA é aplicar esses conceitos na infraestrutura pesada da COPASA.</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-3xl border-l-4 border-amber-500 shadow-sm">
+                        <div class="text-amber-600 font-bold mb-2">O Foco</div>
+                        <p class="text-sm text-slate-600">Eliminar o que o cliente não está disposto a pagar: o desperdício.</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                    <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-8 rounded-3xl text-white shadow-xl relative overflow-hidden">
-                        <div class="relative z-10">
-                            <h3 class="text-2xl font-bold mb-4">Bem-vindos à Disciplina</h3>
-                            <p class="opacity-90 leading-relaxed mb-6">Nesta jornada, vamos transformar a visão tradicional de projetos em uma cultura de alta performance, eliminando desperdícios e focando no valor entregue ao cidadão mineiro.</p>
-                            <button onclick="nav('culture')" class="bg-white text-blue-700 px-6 py-2 rounded-full font-bold text-sm hover:bg-blue-50 transition-colors">Começar Estudo</button>
-                        </div>
-                        <div class="absolute -bottom-10 -right-10 text-white/10 text-[150px] font-bold">LEAN</div>
+                <div class="bg-blue-900 p-8 rounded-[40px] text-white flex flex-col md:flex-row items-center gap-8 shadow-xl">
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold mb-4">Contexto Saneamento (Minas Gerais)</h3>
+                        <p class="opacity-80 leading-relaxed">A COPASA gerencia milhares de quilômetros de rede. Um ganho de 5% de eficiência no reparo de vazamentos representa milhões de reais que podem ser reinvestidos na universalização do esgoto.</p>
                     </div>
-                    
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                        <h3 class="text-xl font-bold text-slate-800 mb-4">Ementa Interativa</h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-center gap-3 text-slate-600">
-                                <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold">1</span>
-                                Cultura Lean & Pensamento Enxuto
-                            </li>
-                            <li class="flex items-center gap-3 text-slate-600">
-                                <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold">2</span>
-                                Value Stream Mapping (VSM)
-                            </li>
-                            <li class="flex items-center gap-3 text-slate-600">
-                                <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold">3</span>
-                                Root Cause Analysis (Análise de Causa Raiz)
-                            </li>
-                            <li class="flex items-center gap-3 text-slate-600">
-                                <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold">4</span>
-                                Aplicações Práticas em Projetos de Saneamento
-                            </li>
-                        </ul>
+                    <div class="flex-shrink-0 bg-white/10 p-4 rounded-3xl border border-white/20">
+                        <div class="text-center">
+                            <div class="text-3xl font-black">24/7</div>
+                            <div class="text-[10px] uppercase font-bold tracking-widest">Disponibilidade</div>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
-        function renderCulture(el) {
+        function renderCultura(el) {
             el.innerHTML = `
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-slate-900">Enxergando os Desperdícios</h2>
-                    <p class="text-slate-600 mt-2">Clique nos conceitos abaixo para entender como o desperdício se manifesta no dia a dia da <strong>COPASA</strong>.</p>
+                <div class="theory-block">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Os 5 Princípios Lean</h2>
+                    <p class="text-slate-600">A base filosófica do Lean aplicada à gestão de projetos públicos.</p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    ${wastes.map(w => `
-                        <div class="waste-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 cursor-pointer transition-all hover:border-blue-300" onclick="alertWaste('${w.title}', '${w.example}')">
-                            <div class="text-4xl mb-4">${w.icon}</div>
-                            <h3 class="font-bold text-slate-800 mb-2">${w.title}</h3>
-                            <p class="text-xs text-slate-500 leading-relaxed">${w.desc}</p>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-12">
+                    ${theoryData.cultura.principios.map((p, i) => `
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border text-center hover:border-blue-400 transition-all cursor-default">
+                            <div class="text-blue-600 font-black mb-1">${i+1}</div>
+                            <div class="text-sm font-bold text-slate-800">${p.t}</div>
+                            <div class="text-[10px] text-slate-500 mt-1">${p.d}</div>
                         </div>
                     `).join('')}
                 </div>
 
-                <div id="waste-alert" class="mt-8 hidden fade-in bg-blue-50 border border-blue-200 p-6 rounded-2xl">
-                    <div class="flex items-start gap-4">
-                        <div class="text-2xl">💡</div>
-                        <div>
-                            <h4 id="alert-title" class="font-bold text-blue-900">Exemplo Prático</h4>
-                            <p id="alert-content" class="text-blue-800 mt-1"></p>
-                        </div>
+                <div class="mb-10">
+                    <h3 class="text-xl font-bold text-slate-800 mb-6">Enxergando a 'Muda' (Desperdício) no Saneamento</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        ${theoryData.cultura.desperdicios.map(w => `
+                            <div class="glass-card p-5 rounded-3xl border hover:shadow-lg transition-all group">
+                                <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">${w.i}</div>
+                                <h4 class="font-bold text-slate-900 mb-1">${w.t}</h4>
+                                <p class="text-[10px] text-slate-500 mb-3">${w.d}</p>
+                                <div class="bg-blue-50 p-2 rounded-xl text-[10px] text-blue-700 italic border border-blue-100">
+                                    Ex: ${w.d}
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             `;
-        }
-
-        function alertWaste(title, example) {
-            const box = document.getElementById('waste-alert');
-            document.getElementById('alert-title').innerText = `Exemplo na COPASA: ${title}`;
-            document.getElementById('alert-content').innerText = example;
-            box.classList.remove('hidden');
         }
 
         function renderVSM(el) {
             el.innerHTML = `
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-slate-900">Value Stream Mapping (VSM)</h2>
-                    <p class="text-slate-600 mt-2">Simulação de Eficiência do Ciclo em um processo de <strong>Manutenção de Rede</strong>.</p>
+                <div class="theory-block">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Value Stream Mapping (VSM)</h2>
+                    <p class="text-slate-600">Mapear o fluxo é o primeiro passo para otimizar. O VSM diferencia o <strong>Tempo de Valor Agregado (VA)</strong> do <strong>Lead Time total</strong>.</p>
                 </div>
 
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 mb-8">
-                    <div class="flex flex-wrap items-center justify-between mb-10 gap-4">
-                        <div class="bg-slate-50 px-6 py-4 rounded-2xl border border-slate-100">
-                            <div class="text-xs font-bold text-slate-400 uppercase mb-1">PCE (Process Cycle Efficiency)</div>
-                            <div id="pce-val" class="text-4xl font-black text-blue-600">0.0%</div>
+                <div class="bg-white p-8 rounded-[30px] shadow-sm border mb-8">
+                    <h3 class="font-bold text-lg mb-6 flex items-center gap-2">Simulador de Eficiência do Processo <span class="text-xs bg-slate-100 px-2 py-1 rounded">MBA Projects</span></h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                        <div class="space-y-4">
+                            <h4 class="text-sm font-bold text-emerald-600 uppercase">Etapas com Valor (VA)</h4>
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-400">Escavação (min)</label>
+                                <input type="number" id="v1" value="45" oninput="runVSM()" class="w-full p-2 bg-emerald-50 border-emerald-100 border rounded-lg text-sm focus:outline-emerald-500">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-400">Troca de Tubo (min)</label>
+                                <input type="number" id="v2" value="30" oninput="runVSM()" class="w-full p-2 bg-emerald-50 border-emerald-100 border rounded-lg text-sm focus:outline-emerald-500">
+                            </div>
                         </div>
-                        <div class="text-right">
-                            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">META: > 25%</span>
+
+                        <div class="space-y-4">
+                            <h4 class="text-sm font-bold text-amber-600 uppercase">Esperas/Desperdícios (NVA)</h4>
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-400">Espera Autorização (min)</label>
+                                <input type="number" id="n1" value="120" oninput="runVSM()" class="w-full p-2 bg-amber-50 border-amber-100 border rounded-lg text-sm focus:outline-amber-500">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-400">Atraso Material (min)</label>
+                                <input type="number" id="n2" value="180" oninput="runVSM()" class="w-full p-2 bg-amber-50 border-amber-100 border rounded-lg text-sm focus:outline-amber-500">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col justify-center items-center bg-slate-50 rounded-3xl p-6 border border-dashed border-slate-300">
+                            <div class="text-[10px] font-bold text-slate-500 uppercase">Eficiência (PCE)</div>
+                            <div id="pce-score" class="text-5xl font-black text-blue-600">0%</div>
+                            <p class="text-[10px] text-slate-400 mt-2 text-center">Meta Lean: Superar 20% em serviços de campo</p>
                         </div>
                     </div>
 
-                    <div class="flex flex-col md:flex-row items-center gap-4 text-center">
-                        <div class="flex-1 w-full">
-                            <div class="bg-blue-600 text-white p-4 rounded-xl font-bold text-sm shadow-lg mb-2">Solicitação</div>
-                            <div class="text-[10px] text-slate-500 font-bold">VALOR: 5 min</div>
-                        </div>
-                        <div class="w-full md:w-32 bg-amber-50 p-2 rounded-xl border border-amber-200">
-                            <label class="block text-[10px] font-bold text-amber-700 uppercase mb-1">Espera 1 (min)</label>
-                            <input type="number" id="w1" value="120" oninput="calcVSM()" class="w-full text-center border-none bg-transparent font-bold text-amber-900">
-                        </div>
-                        <div class="flex-1 w-full">
-                            <div class="bg-blue-600 text-white p-4 rounded-xl font-bold text-sm shadow-lg mb-2">Triagem / OS</div>
-                            <div class="text-[10px] text-slate-500 font-bold">VALOR: 15 min</div>
-                        </div>
-                        <div class="w-full md:w-32 bg-amber-50 p-2 rounded-xl border border-amber-200">
-                            <label class="block text-[10px] font-bold text-amber-700 uppercase mb-1">Espera 2 (min)</label>
-                            <input type="number" id="w2" value="240" oninput="calcVSM()" class="w-full text-center border-none bg-transparent font-bold text-amber-900">
-                        </div>
-                        <div class="flex-1 w-full">
-                            <div class="bg-blue-600 text-white p-4 rounded-xl font-bold text-sm shadow-lg mb-2">Execução Local</div>
-                            <div class="text-[10px] text-slate-500 font-bold">VALOR: 60 min</div>
-                        </div>
+                    <div class="chart-container">
+                        <canvas id="vsmChart"></canvas>
                     </div>
+                </div>
 
-                    <div class="mt-12 p-6 bg-slate-50 rounded-2xl border border-slate-200">
-                        <h4 class="font-bold text-slate-800 mb-2">💡 Reflexão do Prof. Thiago Lima:</h4>
-                        <p class="text-sm text-slate-600 leading-relaxed">Observe que, mesmo sendo rápidos no reparo (60 min), o tempo que a OS fica "parada" (Esperas) é o que mata a percepção de valor do cliente. <strong>Ataque o tempo de espera!</strong></p>
-                    </div>
+                <div class="bg-slate-900 text-white p-6 rounded-3xl">
+                    <h4 class="font-bold mb-2">Conceitos VSM (Lembrete do Professor):</h4>
+                    <ul class="text-sm space-y-2 opacity-80">
+                        <li>• <strong>Lead Time:</strong> Tempo total do processo (da solicitação à entrega).</li>
+                        <li>• <strong>PCE:</strong> (Tempo VA / Lead Time) * 100.</li>
+                        <li>• <strong>Estado Futuro:</strong> Onde desenhamos o processo removendo os 'NVA' identificados acima.</li>
+                    </ul>
                 </div>
             `;
-            // Defer initial calculation until DOM is updated
-            setTimeout(calcVSM, 50);
+            setTimeout(runVSM, 100);
         }
 
-        function calcVSM() {
-            const w1El = document.getElementById('w1');
-            const w2El = document.getElementById('w2');
-            const display = document.getElementById('pce-val');
-            
-            // Safety check to prevent "null is not an object" error
-            if (!w1El || !w2El || !display) return;
+        function runVSM() {
+            const v1 = parseFloat(document.getElementById('v1').value) || 0;
+            const v2 = parseFloat(document.getElementById('v2').value) || 0;
+            const n1 = parseFloat(document.getElementById('n1').value) || 0;
+            const n2 = parseFloat(document.getElementById('n2').value) || 0;
 
-            const v1 = 5, v2 = 15, v3 = 60;
-            const w1 = parseFloat(w1El.value) || 0;
-            const w2 = parseFloat(w2El.value) || 0;
-            const totalVal = v1 + v2 + v3;
-            const totalTime = totalVal + w1 + w2;
-            
-            // Prevent division by zero
-            const pce = totalTime > 0 ? (totalVal / totalTime) * 100 : 0;
-            
-            display.innerText = pce.toFixed(1) + '%';
-            display.className = pce > 20 ? 'text-4xl font-black text-emerald-600' : 'text-4xl font-black text-amber-600';
+            const totalVA = v1 + v2;
+            const totalNVA = n1 + n2;
+            const leadTime = totalVA + totalNVA;
+            const pce = leadTime > 0 ? (totalVA / leadTime) * 100 : 0;
+
+            document.getElementById('pce-score').innerText = pce.toFixed(1) + '%';
+
+            const ctx = document.getElementById('vsmChart').getContext('2d');
+            if (charts.vsm) charts.vsm.destroy();
+            charts.vsm = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Valor Agregado (Trabalho)', 'Não Agrega Valor (Esperas)'],
+                    datasets: [{
+                        data: [totalVA, totalNVA],
+                        backgroundColor: ['#10b981', '#f59e0b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    cutout: '70%'
+                }
+            });
         }
 
-        function renderRoot(el) {
+        function renderCausa(el) {
             el.innerHTML = `
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-slate-900">Análise de Causa Raiz</h2>
-                    <p class="text-slate-600 mt-2">Use o Princípio de Pareto para focar nos 20% das causas que geram 80% dos atrasos em obras.</p>
+                <div class="theory-block">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Root Cause Analysis (RCA)</h2>
+                    <p class="text-slate-600">Não aceite a primeira resposta. O Lean exige que busquemos a origem do problema.</p>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                        <h3 class="font-bold text-slate-800 mb-4">Pareto: Atrasos em Licitatórios</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Pareto -->
+                    <div class="bg-white p-8 rounded-[30px] shadow-sm border">
+                        <h3 class="font-bold text-slate-800 mb-2 text-sm uppercase">Pareto (80/20)</h3>
+                        <p class="text-xs text-slate-500 mb-6">Foque nos motivos que geram a maioria das reclamações de interrupção.</p>
                         <div class="chart-container">
                             <canvas id="paretoChart"></canvas>
                         </div>
                     </div>
-                    
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                        <h3 class="font-bold text-slate-800 mb-4">Técnica dos 5 Porquês</h3>
-                        <div class="space-y-4">
-                            <div class="p-4 bg-slate-50 rounded-xl border-l-4 border-slate-300">
-                                <p class="text-xs font-bold text-slate-500 uppercase">Problema</p>
-                                <p class="text-sm font-semibold">"A obra do reservatório X está atrasada 30 dias."</p>
+
+                    <!-- 5 Whys -->
+                    <div class="bg-white p-8 rounded-[30px] shadow-sm border flex flex-col">
+                        <h3 class="font-bold text-slate-800 mb-4 text-sm uppercase">Os 5 Porquês (Aplicação)</h3>
+                        <div class="flex-1 space-y-4">
+                            <div class="bg-red-50 p-4 rounded-2xl border border-red-100">
+                                <div class="text-[10px] font-bold text-red-800">SINTOMA</div>
+                                <div class="text-sm font-bold">O gerador da Estação de Tratamento falhou.</div>
                             </div>
-                            <div class="pl-4 border-l-2 border-blue-100 space-y-4">
-                                <input type="text" placeholder="1. Por quê? (Pois faltou cimento no canteiro)" class="w-full p-2 text-sm border-b border-slate-200 focus:outline-none focus:border-blue-500">
-                                <input type="text" placeholder="2. Por quê? (O fornecedor não entregou no prazo)" class="w-full p-2 text-sm border-b border-slate-200 focus:outline-none focus:border-blue-500">
-                                <input type="text" placeholder="3. Por quê? (Houve atraso no pagamento da fatura)" class="w-full p-2 text-sm border-b border-slate-200 focus:outline-none focus:border-blue-500">
-                                <input type="text" placeholder="4. Por quê? (A nota fiscal estava com erro de emissão)" class="w-full p-2 text-sm border-b border-slate-200 focus:outline-none focus:border-blue-500">
-                                <input type="text" placeholder="5. Por quê? (Falta padronização no check-list de recepção de NF)" class="w-full p-2 text-sm border-b border-blue-400 bg-blue-50 font-bold text-blue-900">
+                            <div class="space-y-2 text-sm">
+                                <div class="p-2 border-b">1. Por quê? (Fusível queimou por sobrecarga)</div>
+                                <div class="p-2 border-b">2. Por quê? (O rolamento estava mal lubrificado)</div>
+                                <div class="p-2 border-b">3. Por quê? (Não há óleo suficiente na bomba)</div>
+                                <div class="p-2 border-b">4. Por quê? (O lubrificador automático falhou)</div>
+                                <div class="p-2 bg-blue-50 text-blue-900 font-bold rounded-lg border border-blue-200">5. Por quê? (CAUSA RAIZ: Não há rotina de inspeção para o lubrificador)</div>
                             </div>
-                            <p class="text-[10px] text-slate-400 italic font-medium">A causa raiz quase sempre é um PROCESSO inexistente ou falho, não uma pessoa.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-[30px] shadow-sm border">
+                    <h3 class="font-bold text-slate-800 mb-6 text-sm uppercase">Diagrama de Ishikawa (Espinha de Peixe)</h3>
+                    <div class="overflow-x-auto">
+                        <div class="min-w-[800px] flex flex-col gap-4">
+                            <!-- 6M Categories -->
+                            <div class="grid grid-cols-3 gap-8">
+                                <div class="border-b-4 border-blue-500 pb-2 text-center">
+                                    <h4 class="font-bold text-sm">Método</h4>
+                                    <p class="text-[10px] text-slate-500">Procedimentos falhos</p>
+                                </div>
+                                <div class="border-b-4 border-blue-500 pb-2 text-center">
+                                    <h4 class="font-bold text-sm">Máquina</h4>
+                                    <p class="text-[10px] text-slate-500">Manutenção vencida</p>
+                                </div>
+                                <div class="border-b-4 border-blue-500 pb-2 text-center">
+                                    <h4 class="font-bold text-sm">Mão de Obra</h4>
+                                    <p class="text-[10px] text-slate-500">Falta de treinamento</p>
+                                </div>
+                            </div>
+                            <!-- Central Arrow -->
+                            <div class="h-1 bg-slate-900 w-full relative">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 bg-slate-900 text-white px-4 py-2 font-bold rounded">PROBLEMA</div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-8">
+                                <div class="border-t-4 border-blue-500 pt-2 text-center">
+                                    <h4 class="font-bold text-sm">Material</h4>
+                                    <p class="text-[10px] text-slate-500">Tubos fora da norma</p>
+                                </div>
+                                <div class="border-t-4 border-blue-500 pt-2 text-center">
+                                    <h4 class="font-bold text-sm">Medida</h4>
+                                    <p class="text-[10px] text-slate-500">Indicadores errados</p>
+                                </div>
+                                <div class="border-t-4 border-blue-500 pt-2 text-center">
+                                    <h4 class="font-bold text-sm">Meio Ambiente</h4>
+                                    <p class="text-[10px] text-slate-500">Clima (Chuva forte)</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -358,148 +387,139 @@
         }
 
         function initPareto() {
-            const chartEl = document.getElementById('paretoChart');
-            if (!chartEl) return;
-            const ctx = chartEl.getContext('2d');
-            new Chart(ctx, {
+            const ctx = document.getElementById('paretoChart').getContext('2d');
+            if (charts.pareto) charts.pareto.destroy();
+            charts.pareto = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Falta de Docs', 'Erro de Projeto', 'Recursos Judic.', 'Orçamentação', 'Outros'],
-                    datasets: [{
-                        label: 'Ocorrências',
-                        data: [45, 25, 12, 10, 8],
-                        backgroundColor: '#3b82f6',
-                        order: 2
-                    }, {
-                        label: '% Acumulada',
-                        data: [45, 70, 82, 92, 100],
-                        type: 'line',
-                        borderColor: '#f59e0b',
-                        yAxisID: 'y1',
-                        order: 1
-                    }]
+                    labels: ['Vazamentos', 'Falta de Água', 'Qualidade/Sabor', 'Contas Altas', 'Outros'],
+                    datasets: [
+                        { label: 'Qtd Reclamações', data: [150, 80, 20, 15, 5], backgroundColor: '#3b82f6', order: 2 },
+                        { label: '% Acumulada', data: [55, 85, 92, 98, 100], type: 'line', borderColor: '#f59e0b', yAxisID: 'y1', order: 1 }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true },
-                        y1: { position: 'right', min: 0, max: 100 }
-                    }
+                    scales: { y: { beginAtZero: true }, y1: { position: 'right', max: 100, min: 0 } }
                 }
             });
         }
 
-        function renderTools(el) {
+        function renderFerramentas(el) {
             el.innerHTML = `
-                <div class="mb-8 text-center">
-                    <h2 class="text-3xl font-bold text-slate-900">Kit de Ferramentas Lean</h2>
-                    <p class="text-slate-600 mt-2">Clique nas categorias para filtrar seu toolkit.</p>
+                <div class="theory-block">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Ferramentas Lean</h2>
+                    <p class="text-slate-600">A 'caixa de ferramentas' para colocar a cultura em prática.</p>
                 </div>
 
-                <div class="flex justify-center gap-2 mb-10 overflow-x-auto pb-2">
-                    <button onclick="renderToolsList('all')" class="bg-slate-900 text-white px-4 py-2 rounded-full text-xs font-bold">Todas</button>
-                    <button onclick="renderToolsList('Gestão')" class="bg-white border px-4 py-2 rounded-full text-xs font-bold text-slate-600 hover:bg-slate-50">Gestão Visual</button>
-                    <button onclick="renderToolsList('Qualidade')" class="bg-white border px-4 py-2 rounded-full text-xs font-bold text-slate-600 hover:bg-slate-50">Qualidade</button>
-                    <button onclick="renderToolsList('Pessoas')" class="bg-white border px-4 py-2 rounded-full text-xs font-bold text-slate-600 hover:bg-slate-50">Cultura/Pessoas</button>
-                </div>
-
-                <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            `;
-            renderToolsList('all');
-        }
-
-        const tools = [
-            { name: 'Kanban', cat: 'Gestão', desc: 'Controle visual de fluxo de tarefas e estoques.' },
-            { name: '5S', cat: 'Qualidade', desc: 'Senso de organização e limpeza como base para o trabalho enxuto.' },
-            { name: 'Poka-yoke', cat: 'Qualidade', desc: 'Dispositivos à prova de erros para evitar defeitos na fonte.' },
-            { name: 'Gemba Walk', cat: 'Pessoas', desc: 'Ir ao local real da operação (obra/ETA) para entender os fatos.' },
-            { name: 'Kaizen', cat: 'Pessoas', desc: 'Melhoria contínua diária com a participação de todos.' },
-            { name: 'Heijunka', cat: 'Gestão', desc: 'Nivelamento da carga de trabalho para evitar sobrecarga ou ociosidade.' }
-        ];
-
-        function renderToolsList(cat) {
-            const grid = document.getElementById('tools-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            const filtered = cat === 'all' ? tools : tools.filter(t => t.cat === cat);
-            filtered.forEach(t => {
-                grid.innerHTML += `
-                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                        <span class="text-[10px] font-bold text-blue-600 uppercase bg-blue-50 px-2 py-1 rounded">${t.cat}</span>
-                        <h3 class="text-lg font-bold text-slate-800 mt-3 mb-2">${t.name}</h3>
-                        <p class="text-sm text-slate-500">${t.desc}</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-3xl border shadow-sm hover:border-blue-400 transition-colors">
+                        <div class="text-blue-600 font-black text-xl mb-2">5S</div>
+                        <p class="text-sm font-bold mb-2">Organização e Disciplina</p>
+                        <p class="text-xs text-slate-500">Utilização, Ordenação, Limpeza, Saúde e Autodisciplina. Crítico em canteiros de obra.</p>
                     </div>
-                `;
-            });
-        }
-
-        function renderProjects(el) {
-            el.innerHTML = `
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-slate-900">Impacto em Projetos de Saneamento</h2>
-                    <p class="text-slate-600 mt-2">Adoção do Lean: Redução de desperdícios financeiros e aumento da velocidade de entrega.</p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                        <h3 class="font-bold text-slate-800 mb-6">Comparativo: Tempo de Execução (Dias)</h3>
-                        <div class="chart-container">
-                            <canvas id="compChart"></canvas>
-                        </div>
+                    <div class="bg-white p-6 rounded-3xl border shadow-sm hover:border-blue-400 transition-colors">
+                        <div class="text-blue-600 font-black text-xl mb-2">Kanban</div>
+                        <p class="text-sm font-bold mb-2">Gestão Visual</p>
+                        <p class="text-xs text-slate-500">Puxar o trabalho. Usado na COPASA para reposição de químicos e materiais hidráulicos.</p>
                     </div>
-                    
-                    <div class="space-y-6">
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-6">
-                            <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-3xl">📉</div>
-                            <div>
-                                <h4 class="font-bold text-slate-800">Redução de Custos</h4>
-                                <p class="text-sm text-slate-500">Eliminar estoques intermediários libera capital para novos investimentos em Minas Gerais.</p>
-                            </div>
-                        </div>
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-6">
-                            <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-3xl">🚀</div>
-                            <div>
-                                <h4 class="font-bold text-slate-800">Velocidade de Entrega</h4>
-                                <p class="text-sm text-slate-500">População atendida em menos tempo com obras enxutas e focadas em fluxo contínuo.</p>
-                            </div>
-                        </div>
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-6">
-                            <div class="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center text-3xl">✅</div>
-                            <div>
-                                <h4 class="font-bold text-slate-800">Qualidade na Fonte</h4>
-                                <p class="text-sm text-slate-500">Menos retrabalho significa menos interrupções no fornecimento de água.</p>
-                            </div>
-                        </div>
+                    <div class="bg-white p-6 rounded-3xl border shadow-sm hover:border-blue-400 transition-colors">
+                        <div class="text-blue-600 font-black text-xl mb-2">Poka-Yoke</div>
+                        <p class="text-sm font-bold mb-2">À prova de erros</p>
+                        <p class="text-xs text-slate-500">Mecanismos que impedem o erro humano (ex: conexões de bitolas diferentes que não se encaixam).</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border shadow-sm hover:border-blue-400 transition-colors">
+                        <div class="text-blue-600 font-black text-xl mb-2">A3</div>
+                        <p class="text-sm font-bold mb-2">Relatório de Solução</p>
+                        <p class="text-xs text-slate-500">Uma única folha para contar a história do problema e sua solução estruturada.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border shadow-sm hover:border-blue-400 transition-colors">
+                        <div class="text-blue-600 font-black text-xl mb-2">Gemba</div>
+                        <p class="text-sm font-bold mb-2">Vá ao local real</p>
+                        <p class="text-xs text-slate-500">Gerentes e diretores visitando as frentes de serviço, não apenas vendo planilhas.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border shadow-sm hover:border-blue-400 transition-colors">
+                        <div class="text-blue-600 font-black text-xl mb-2">Kaizen</div>
+                        <p class="text-sm font-bold mb-2">Melhoria Contínua</p>
+                        <p class="text-xs text-slate-500">Eventos rápidos para resolver problemas pontuais de eficiência em 3 a 5 dias.</p>
                     </div>
                 </div>
             `;
-            setTimeout(() => {
-                const chartEl = document.getElementById('compChart');
-                if (!chartEl) return;
-                const ctx = chartEl.getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Licitação', 'Implantação', 'Testes', 'Operação'],
-                        datasets: [
-                            { label: 'Tradicional', data: [90, 180, 45, 10], backgroundColor: '#cbd5e1' },
-                            { label: 'Lean (Puxado)', data: [45, 120, 15, 5], backgroundColor: '#3b82f6' }
-                        ]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
-            }, 100);
         }
 
-        // Mobile Logic
-        const mobileBtn = document.getElementById('mobile-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileBtn.onclick = () => mobileMenu.classList.toggle('hidden');
-        function closeMobile() { mobileMenu.classList.add('hidden'); }
+        function renderProjetos(el) {
+            el.innerHTML = `
+                <div class="theory-block">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Lean em Gestão de Projetos</h2>
+                    <p class="text-slate-600">Adaptando a produção para o ambiente dinâmico de projetos de engenharia.</p>
+                </div>
 
-        // Start
-        nav('home');
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-slate-900 text-white p-8 rounded-[40px] shadow-xl">
+                        <h3 class="text-xl font-bold mb-6">Last Planner System (LPS)</h3>
+                        <div class="space-y-4 text-sm">
+                            <div class="p-4 bg-white/10 rounded-2xl">
+                                <div class="font-bold text-blue-400">Plano de Longo Prazo</div>
+                                <p class="opacity-70">Marcos do projeto (ex: Finalização da ETE em 12 meses).</p>
+                            </div>
+                            <div class="p-4 bg-white/10 rounded-2xl">
+                                <div class="font-bold text-blue-400">Look-ahead (6 semanas)</div>
+                                <p class="opacity-70">Identificar restrições antes que parem a obra.</p>
+                            </div>
+                            <div class="p-4 bg-blue-600 rounded-2xl shadow-lg">
+                                <div class="font-bold">Compromisso Semanal</div>
+                                <p class="opacity-90">O que a equipe de campo SE COMPROMETE a fazer esta semana.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-[40px] shadow-sm border">
+                        <h3 class="font-bold text-slate-800 mb-6">Ganhos em Projetos COPASA</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span>Redução de Lead Time</span>
+                                    <span class="text-blue-600">35%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-2">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 35%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span>Aumento da Confiabilidade</span>
+                                    <span class="text-emerald-600">85% PPC</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-2">
+                                    <div class="bg-emerald-500 h-2 rounded-full" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span>Redução de Retrabalho</span>
+                                    <span class="text-amber-600">22%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-2">
+                                    <div class="bg-amber-500 h-2 rounded-full" style="width: 22%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-8 text-xs text-slate-500 italic">"Projetos Lean focam em proteger o fluxo de trabalho das variabilidades."</p>
+                    </div>
+                </div>
+                
+                <div class="bg-emerald-900 p-8 rounded-[40px] text-white text-center">
+                    <h3 class="text-2xl font-bold mb-2">Pronto para transformar a COPASA?</h3>
+                    <p class="opacity-80">O Lean é uma jornada de 1% melhor todo dia.</p>
+                </div>
+            `;
+        }
+
+        // --- Init ---
+        window.onload = () => {
+            changeTab('intro');
+        };
     </script>
 </body>
 </html>
