@@ -54,7 +54,7 @@
 
         .chart-container { position: relative; width: 100%; height: 280px; margin: 0 auto; }
         
-        .nav-btn { transition: all 0.3s; border-left: 4px solid transparent; }
+        .nav-btn { transition: all 0.3s; border-left: 4px solid transparent; width: 100%; text-align: left; }
         .nav-active { background-color: #0284c7; border-left: 4px solid #0c4a6e; color: white !important; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -68,80 +68,107 @@
         table { border-collapse: separate; border-spacing: 0; width: 100%; }
         th { background-color: #f8fafc; color: #475569; font-weight: 700; text-transform: uppercase; font-size: 0.65rem; letter-spacing: 0.05em; padding: 1rem; border-bottom: 2px solid #e2e8f0; }
         td { padding: 1rem; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
+
+        /* Header Mobile Fix */
+        .mobile-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; background: white; border-bottom: 1px solid #e2e8f0; }
     </style>
-    <!-- Chosen Palette: COPASA Inspired (Blue/Teal/Neutral) - Foco em Saneamento e Profissionalismo -->
 </head>
 <body class="flex h-screen overflow-hidden">
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-72 bg-white shadow-xl hidden md:flex flex-col z-10 shrink-0">
-        <div class="p-8 border-b border-gray-100">
+    <!-- Header Mobile -->
+    <div class="mobile-header lg:hidden">
+        <span class="font-black text-sky-700">MBA COPASA</span>
+        <button id="menu-toggle-btn" class="p-2 text-sky-700 text-2xl focus:outline-none">☰</button>
+    </div>
+
+    <!-- Sidebar Navigation (Desktop) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 lg:static lg:block w-72 bg-white shadow-xl z-[60] transition-transform duration-300 ease-in-out shrink-0 flex flex-col">
+        <div class="p-8 border-b border-gray-100 hidden lg:block">
             <h1 class="text-2xl font-black text-sky-700 leading-tight">MBA COPASA</h1>
             <p class="text-[10px] text-gray-500 mt-1 font-bold uppercase tracking-widest">Gestão de Projetos & Lean</p>
         </div>
+        
+        <!-- Mobile Sidebar Close Button -->
+        <div class="p-4 border-b lg:hidden flex justify-between items-center bg-sky-50">
+            <span class="font-bold text-sky-800">Navegação</span>
+            <button id="menu-close-btn" class="text-2xl text-sky-800">✕</button>
+        </div>
+
         <nav class="flex-1 overflow-y-auto py-6">
             <ul class="space-y-1">
-                <li><button onclick="nav('intro')" id="nav-intro" class="nav-btn w-full text-left px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">1. Alinhamento Estratégico</button></li>
-                <li><button onclick="nav('cultura')" id="nav-cultura" class="nav-btn w-full text-left px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">2. Cultura & VA/NVA</button></li>
-                <li><button onclick="nav('lab')" id="nav-lab" class="nav-btn w-full text-left px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">3. Laboratório VA/NVA</button></li>
-                <li><button onclick="nav('metrics')" id="nav-metrics" class="nav-btn w-full text-left px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">4. Simulador de Métricas</button></li>
-                <li><button onclick="nav('vsm')" id="nav-vsm" class="nav-btn w-full text-left px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">5. Construindo o VSM</button></li>
-                <li><button onclick="nav('kata')" id="nav-kata" class="nav-btn w-full text-left px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">6. Toyota Kata & DVF</button></li>
+                <li><button onclick="nav('intro')" id="nav-intro" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">1. Alinhamento Estratégico</button></li>
+                <li><button onclick="nav('cultura')" id="nav-cultura" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">2. Cultura & VA/NVA</button></li>
+                <li><button onclick="nav('lab')" id="nav-lab" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">3. Laboratório VA/NVA</button></li>
+                <li><button onclick="nav('metrics')" id="nav-metrics" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">4. Simulador de Métricas</button></li>
+                <li><button onclick="nav('vsm')" id="nav-vsm" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">5. Construindo o VSM</button></li>
+                <li><button onclick="nav('kata')" id="nav-kata" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">6. Toyota Kata & DVF</button></li>
             </ul>
         </nav>
+        
         <div class="p-6 border-t border-gray-100 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center text-white font-bold text-sm shadow-lg">TL</div>
+            <div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center text-white font-bold text-sm">TL</div>
             <div>
-                <p class="text-xs font-bold text-gray-700 leading-none">Prof. Thiago Lima</p>
-                <p class="text-[10px] text-gray-400 mt-1 uppercase">Instrutor MBA</p>
+                <p class="text-xs font-bold text-gray-700">Prof. Thiago Lima</p>
+                <p class="text-[10px] text-gray-400">Instrutor MBA</p>
             </div>
         </div>
     </aside>
 
+    <!-- Overlay para fechar menu no mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-[55] hidden lg:hidden"></div>
+
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto p-6 md:p-12" id="scroll-target">
+    <main class="flex-1 overflow-y-auto p-6 md:p-12 pt-20 lg:pt-12" id="scroll-target">
         <div id="content-area" class="max-w-5xl mx-auto">
             <!-- Dynamic Content -->
         </div>
     </main>
 
     <script>
-        // --- Global State ---
+        // --- State ---
         let charts = {};
         let score = 0;
         let currentActivityIndex = 0;
 
         const activities = [
-            { t: "Consertando cano rompido no Gemba", type: "VA", hint: "Transforma o problema em solução para o cliente." },
-            { t: "Caminhão parado no trânsito de BH", type: "NVA", hint: "O cliente não paga por trânsito; é um desperdício de logística." },
-            { t: "Preenchendo relatório para Arsae-MG", type: "NNVA", hint: "Obrigatório por lei (Não-Agrega Valor Necessário)." },
-            { t: "Tratamento físico-químico da água na ETA", type: "VA", hint: "Torna a água potável, agregando valor direto." },
-            { t: "Aguardando assinatura do gerente para liberar obra", type: "NVA", hint: "Puro desperdício de tempo e fila." },
-            { t: "Retrabalho de recomposição asfáltica", type: "NVA", hint: "Fazer duas vezes o mesmo serviço é desperdício de recurso." },
-            { t: "Inspeção de segurança obrigatória", type: "NNVA", hint: "Garante a vida, embora não saia água na torneira por isso." }
+            { t: "Consertando cano rompido no campo", type: "VA", hint: "Transforma o problema em solução para o cliente." },
+            { t: "Caminhão parado no trânsito urbano", type: "NVA", hint: "O cliente não paga por trânsito; é um desperdício logístico." },
+            { t: "Preenchendo relatório para Arsae-MG", type: "NNVA", hint: "Obrigatório por lei (Necessário mas s/ Valor direto)." },
+            { t: "Tratamento físico-químico da água", type: "VA", hint: "Agrega valor direto: torna a água potável." },
+            { t: "Aguardando assinatura para liberar obra", type: "NVA", hint: "Fila e espera; desperdício de tempo." },
+            { t: "Retrabalho de recomposição de calçada", type: "NVA", hint: "Fazer de novo é desperdício de recurso." }
         ];
+
+        // --- Mobile Menu Logic ---
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toggleBtn = document.getElementById('menu-toggle-btn');
+        const closeBtn = document.getElementById('menu-close-btn');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        toggleBtn.onclick = toggleMenu;
+        closeBtn.onclick = toggleMenu;
+        overlay.onclick = toggleMenu;
 
         // --- Navigation ---
         function nav(page) {
             const container = document.getElementById('content-area');
             container.innerHTML = '';
             
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('nav-active', 'text-white');
-                btn.classList.add('text-gray-600');
-            });
-            
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active', 'text-white'));
             const activeBtn = document.getElementById(`nav-${page}`);
-            if (activeBtn) {
-                activeBtn.classList.add('nav-active');
-                activeBtn.classList.remove('text-gray-600');
-            }
+            if (activeBtn) activeBtn.classList.add('nav-active');
             
             const section = document.createElement('div');
             section.className = 'animate-fade';
-            container.appendChild(section); // Fix: Append before rendering to avoid ID lookup failures
+            container.appendChild(section); 
             
             document.getElementById('scroll-target').scrollTop = 0;
+            if (!sidebar.classList.contains('-translate-x-full')) toggleMenu(); // Fecha menu no mobile após clicar
 
             switch(page) {
                 case 'intro': renderIntro(section); break;
@@ -156,45 +183,24 @@
         function renderIntro(el) {
             el.innerHTML = `
                 <div class="theory-section">
-                    <h2 class="text-3xl font-black text-slate-900 leading-tight">Alinhamento Estratégico: Missão, Visão e Valores no Contexto Lean</h2>
-                    <p class="text-slate-500 mt-2">A identidade corporativa da COPASA como alicerce da excelência.</p>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900">Alinhamento Estratégico</h2>
+                    <p class="text-slate-500">Missão, Visão e Valores no Contexto Lean</p>
                 </div>
                 
-                <div class="bg-white rounded-3xl shadow-sm p-8 mb-8 border border-slate-100">
-                    <p class="text-slate-600 mb-6 leading-relaxed">
-                        A identidade corporativa da COPASA serve como o alicerce para a implementação da cultura Lean. Quando a organização define sua missão como a prestação de serviços de saneamento com excelência, ela está, na verdade, definindo o <strong>"Valor"</strong> que o cliente espera receber. No pensamento Lean, qualquer atividade que não contribua diretamente para o cumprimento desta missão é considerada um desperdício. A visão de ser reconhecida como referência em soluções de saneamento exige uma busca incessante pela perfeição, um dos cinco princípios fundamentais do Lean Thinking.
+                <div class="bg-white rounded-3xl shadow-sm p-6 md:p-8 mb-8 border border-slate-100">
+                    <p class="text-slate-600 mb-6 text-sm md:text-base leading-relaxed">
+                        A identidade corporativa da COPASA serve como o alicerce para a implementação da cultura Lean. Quando a organização define sua missão como a prestação de serviços com excelência, ela está definindo o <strong>"Valor"</strong> que o cliente espera receber.
                     </p>
                     
                     <div class="overflow-x-auto rounded-2xl border border-slate-200">
-                        <table>
+                        <table class="min-w-[600px]">
                             <thead>
-                                <tr>
-                                    <th>Elemento Organizacional</th>
-                                    <th>Definição Estratégica COPASA</th>
-                                    <th>Interpretação sob a Ótica Lean</th>
-                                </tr>
+                                <tr><th>Elemento</th><th>Definição COPASA</th><th>Ótica Lean</th></tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="font-bold text-sky-700">Missão</td>
-                                    <td>Prestar serviços de saneamento e gestão de ativos como braço estratégico de Minas Gerais, com ética e integridade.</td>
-                                    <td>Focar na entrega de valor máximo ao cidadão, eliminando burocracias que não agregam saúde ou qualidade de vida.</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-bold text-sky-700">Visão</td>
-                                    <td>Ser referência em suporte técnico especializado e soluções de saneamento no território mineiro.</td>
-                                    <td>Adotar a melhoria contínua (Kaizen) para atingir níveis de desempenho de classe mundial em eficiência operacional.</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-bold text-sky-700">Valores</td>
-                                    <td>Responsabilidade, transparência, honestidade, excelência e compromisso com a sustentabilidade social.</td>
-                                    <td>Respeito pelas pessoas (operadores e cidadãos) e uso de fatos e dados (transparência) para resolver problemas.</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-bold text-sky-700">Propósito</td>
-                                    <td>Gerar valor nas comunidades onde atua através de projetos sociais e ambientais.</td>
-                                    <td>Maximizar o impacto social positivo reduzindo o consumo de recursos naturais e financeiros (eco-eficiência).</td>
-                                </tr>
+                                <tr><td class="font-bold text-sky-700">Missão</td><td>Prestar serviços de saneamento com ética e integridade.</td><td>Entrega de valor máximo eliminando burocracias.</td></tr>
+                                <tr><td class="font-bold text-sky-700">Visão</td><td>Ser referência em soluções de saneamento em MG.</td><td>Melhoria contínua (Kaizen) para eficiência mundial.</td></tr>
+                                <tr><td class="font-bold text-sky-700">Valores</td><td>Transparência, honestidade e excelência.</td><td>Respeito pelas pessoas e decisões baseadas em dados.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -204,61 +210,38 @@
 
         function renderCultura(el) {
             el.innerHTML = `
-                <div class="theory-section">
-                    <h2 class="text-2xl font-bold text-slate-900">Cultura Lean: VA, NVA e NNVA</h2>
-                    <p class="text-slate-500">Classificando as atividades para enxergar o desperdício.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div class="bg-emerald-50 p-6 rounded-[2rem] border-2 border-emerald-100 shadow-sm transition-all hover:shadow-md">
-                        <div class="text-emerald-800 font-bold mb-3 flex items-center gap-2 text-lg"><span>✅</span> VA</div>
-                        <p class="text-xs text-emerald-700 leading-relaxed font-medium"><strong>Valor Agregado:</strong> Atividades que transformam o produto ou serviço sob a ótica do cliente. É o que o cidadão mineiro realmente quer pagar.</p>
-                        <div class="mt-4 p-2 bg-white rounded-xl text-[10px] text-emerald-600 font-bold uppercase border border-emerald-100">Ex: Tratar a água ou consertar o cano.</div>
+                <div class="theory-section"><h2 class="text-2xl font-bold">VA, NVA e NNVA</h2></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-emerald-50 p-6 rounded-3xl border-2 border-emerald-100">
+                        <div class="font-bold text-emerald-800 mb-2">VA (Valor Agregado)</div>
+                        <p class="text-xs text-emerald-700 leading-tight italic">O cliente paga por isso.</p>
                     </div>
-                    <div class="bg-amber-50 p-6 rounded-[2rem] border-2 border-amber-100 shadow-sm transition-all hover:shadow-md">
-                        <div class="text-amber-800 font-bold mb-3 flex items-center gap-2 text-lg"><span>⚠️</span> NNVA</div>
-                        <p class="text-xs text-amber-700 leading-relaxed font-medium"><strong>Necessário mas s/ Valor:</strong> Atividades que não agregam valor direto, mas são exigidas por regulação, segurança ou tecnologia atual.</p>
-                        <div class="mt-4 p-2 bg-white rounded-xl text-[10px] text-amber-600 font-bold uppercase border border-amber-100">Ex: Auditoria ARSAE ou PCMSO.</div>
+                    <div class="bg-amber-50 p-6 rounded-3xl border-2 border-amber-100">
+                        <div class="font-bold text-amber-800 mb-2">NNVA (Obrigatório)</div>
+                        <p class="text-xs text-amber-700 leading-tight italic">Exigências legais e segurança.</p>
                     </div>
-                    <div class="bg-red-50 p-6 rounded-[2rem] border-2 border-red-100 shadow-sm transition-all hover:shadow-md">
-                        <div class="text-red-800 font-bold mb-3 flex items-center gap-2 text-lg"><span>❌</span> NVA</div>
-                        <p class="text-xs text-red-700 leading-relaxed font-medium"><strong>Desperdício:</strong> Atividades que consomem recursos mas não geram valor nenhum. Devem ser o alvo prioritário de eliminação.</p>
-                        <div class="mt-4 p-2 bg-white rounded-xl text-[10px] text-red-600 font-bold uppercase border border-red-100">Ex: Espera por material ou retrabalho.</div>
+                    <div class="bg-red-50 p-6 rounded-3xl border-2 border-red-100">
+                        <div class="font-bold text-red-800 mb-2">NVA (Desperdício)</div>
+                        <p class="text-xs text-red-700 leading-tight italic">Elimine imediatamente.</p>
                     </div>
-                </div>
-
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><span>💧</span> A Metáfora do Rio no Saneamento</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        No Lean, enxergamos o processo como um rio. O <strong>VA</strong> é a água fluindo livremente da ETA até o reservatório. O <strong>NVA</strong> são as barragens, redemoinhos e obstruções que fazem o serviço demorar e custar caro sem melhorar a qualidade da água entregue.
-                    </p>
                 </div>
             `;
         }
 
         function renderLab(el) {
             el.innerHTML = `
-                <div class="theory-section">
-                    <h2 class="text-2xl font-bold text-slate-900">Laboratório de Classificação</h2>
-                    <p class="text-slate-500">Pratique a diferenciação entre Valor e Desperdício no contexto COPASA.</p>
-                </div>
-
-                <div class="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-100 text-center relative overflow-hidden">
-                    <div class="flex justify-between items-center mb-8">
-                        <span class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Desafio Lean</span>
-                        <div id="game-score" class="bg-sky-100 text-sky-700 px-4 py-1 rounded-full font-bold text-xs shadow-sm">Acertos: ${score}</div>
+                <div class="theory-section"><h2 class="text-2xl font-bold">Laboratório de Classificação</h2></div>
+                <div class="bg-white p-6 md:p-10 rounded-[2.5rem] shadow-xl border border-slate-100 text-center">
+                    <div id="game-score" class="mb-4 bg-sky-100 text-sky-700 px-4 py-1 rounded-full font-bold text-xs inline-block">Acertos: ${score}</div>
+                    <div class="min-h-[140px] flex items-center justify-center bg-slate-50 rounded-[2rem] border-2 border-dashed border-slate-200 p-6 mb-8">
+                        <p id="activity-text" class="text-xl font-bold text-slate-800"></p>
                     </div>
-
-                    <div class="min-h-[160px] flex items-center justify-center bg-slate-50 rounded-[2rem] border-2 border-dashed border-slate-200 p-8 mb-10 transition-all">
-                        <p id="activity-text" class="text-2xl font-bold text-slate-800 leading-tight"></p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <button onclick="checkAnswer('VA')" class="game-btn bg-emerald-500 text-white p-4 rounded-2xl font-bold">VA</button>
+                        <button onclick="checkAnswer('NNVA')" class="game-btn bg-amber-500 text-white p-4 rounded-2xl font-bold">NNVA</button>
+                        <button onclick="checkAnswer('NVA')" class="game-btn bg-red-500 text-white p-4 rounded-2xl font-bold">NVA</button>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <button onclick="checkAnswer('VA')" class="game-btn bg-emerald-500 hover:bg-emerald-600 text-white p-5 rounded-2xl font-bold shadow-lg shadow-emerald-100">VA (Valor Agregado)</button>
-                        <button onclick="checkAnswer('NNVA')" class="game-btn bg-amber-500 hover:bg-amber-600 text-white p-5 rounded-2xl font-bold shadow-lg shadow-amber-100">NNVA (Obrigatório)</button>
-                        <button onclick="checkAnswer('NVA')" class="game-btn bg-red-500 hover:bg-red-600 text-white p-5 rounded-2xl font-bold shadow-lg shadow-red-100">NVA (Desperdício)</button>
-                    </div>
-                    <div id="game-feedback" class="mt-8 text-sm font-bold h-6 flex items-center justify-center"></div>
+                    <div id="game-feedback" class="mt-6 text-sm font-bold h-6"></div>
                 </div>
             `;
             initLabActivity();
@@ -270,185 +253,77 @@
             if (currentActivityIndex < activities.length) {
                 txt.innerText = activities[currentActivityIndex].t;
             } else {
-                txt.innerHTML = "<div class='text-center animate-bounce'><span class='text-sky-600 text-3xl block mb-2'>🏆</span><span class='text-sky-800'>Laboratório Concluído com Sucesso!</span></div><br><button onclick='resetLab()' class='text-[10px] uppercase text-slate-400 underline tracking-widest hover:text-sky-600'>Recomeçar</button>";
+                txt.innerHTML = "<span class='text-sky-600'>Laboratório Concluído! 🏆</span>";
             }
         }
 
         function checkAnswer(ans) {
             if (currentActivityIndex >= activities.length) return;
             const fb = document.getElementById('game-feedback');
-            if (!fb) return;
-
             if (ans === activities[currentActivityIndex].type) {
                 score++;
                 fb.innerText = "Correto! " + activities[currentActivityIndex].hint;
-                fb.className = "mt-8 text-sm font-bold text-emerald-600 animate-fade";
+                fb.className = "mt-6 text-sm font-bold text-emerald-600";
                 document.getElementById('game-score').innerText = "Acertos: " + score;
-                setTimeout(() => {
-                    currentActivityIndex++;
-                    fb.innerText = "";
-                    initLabActivity();
-                }, 2000);
+                setTimeout(() => { currentActivityIndex++; fb.innerText = ""; initLabActivity(); }, 1500);
             } else {
-                fb.innerText = "Tente novamente. Isso agrega valor direto ao produto final ou é apenas uma exigência administrativa/espera?";
-                fb.className = "mt-8 text-sm font-bold text-red-500 animate-pulse";
+                fb.innerText = "Ops! Reflita sobre o valor para o cliente.";
+                fb.className = "mt-6 text-sm font-bold text-red-500";
             }
-        }
-
-        function resetLab() {
-            score = 0; currentActivityIndex = 0; nav('lab');
         }
 
         function renderMetrics(el) {
             el.innerHTML = `
-                <div class="theory-section">
-                    <h2 class="text-2xl font-bold text-slate-900">Simulador de Métricas e Eficiência (PCE)</h2>
-                    <p class="text-slate-500">Cálculo real de Lead Time em processos de saneamento.</p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10">
-                    <div class="lg:col-span-4 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col">
-                        <h3 class="font-bold text-slate-800 mb-6 text-sm uppercase flex items-center gap-2"><span>🧮</span> Calculadora</h3>
-                        <div class="space-y-6 flex-1">
-                            <div>
-                                <label class="text-[10px] font-bold text-emerald-600 uppercase mb-2 block">Tempo de Processamento (VA)</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="number" id="m-va" value="120" oninput="updateMetrics()" class="flex-1 p-4 bg-emerald-50 border-2 border-emerald-100 rounded-2xl font-bold text-emerald-700 focus:outline-none focus:border-emerald-400">
-                                    <span class="text-xs font-bold text-slate-400">min</span>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-bold text-red-600 uppercase mb-2 block">Tempo de Espera/Fila (NVA)</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="number" id="m-nva" value="2880" oninput="updateMetrics()" class="flex-1 p-4 bg-red-50 border-2 border-red-100 rounded-2xl font-bold text-red-700 focus:outline-none focus:border-red-400">
-                                    <span class="text-xs font-bold text-slate-400">min</span>
-                                </div>
-                            </div>
+                <div class="theory-section"><h2 class="text-2xl font-bold">Simulador de Métricas</h2></div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-4 bg-white p-6 rounded-[2rem] shadow-sm border space-y-6">
+                        <div>
+                            <label class="text-[10px] font-bold uppercase mb-1 block">Tempo VA (Ativo)</label>
+                            <input type="number" id="m-va" value="120" oninput="updateMetrics()" class="w-full p-4 bg-emerald-50 border-2 border-emerald-100 rounded-2xl font-bold">
                         </div>
-                        <div class="mt-8 pt-6 border-t border-slate-100 text-center">
-                            <div class="text-[10px] text-slate-400 font-bold uppercase mb-2">PCE (Eficiência do Ciclo)</div>
-                            <div id="pce-val" class="text-5xl font-black text-blue-600">0%</div>
+                        <div>
+                            <label class="text-[10px] font-bold uppercase mb-1 block">Tempo NVA (Espera)</label>
+                            <input type="number" id="m-nva" value="2880" oninput="updateMetrics()" class="w-full p-4 bg-red-50 border-2 border-red-100 rounded-2xl font-bold">
                         </div>
+                        <div class="text-center pt-4 border-t"><div id="pce-val" class="text-4xl font-black text-blue-600">0%</div><span class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">PCE</span></div>
                     </div>
-                    
-                    <div class="lg:col-span-8 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-                            <div class="flex flex-col items-center">
-                                <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-6 tracking-widest">Composição do Tempo</h4>
-                                <div class="chart-container"><canvas id="metricsChart"></canvas></div>
-                            </div>
-                            <div class="flex flex-col items-center justify-center">
-                                <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-6 tracking-widest">Termômetro de Eficiência</h4>
-                                <div class="w-full max-w-[200px] h-48 relative">
-                                    <canvas id="gaugeChart"></canvas>
-                                    <div class="absolute inset-0 flex items-center justify-center font-black text-slate-900 text-2xl" id="gauge-text" style="padding-top: 30px">0%</div>
-                                </div>
-                                <p id="metrics-advice" class="text-[10px] mt-4 font-bold text-center px-4 uppercase leading-tight"></p>
-                            </div>
-                        </div>
+                    <div class="lg:col-span-8 bg-white p-6 rounded-[2rem] shadow-sm border">
+                        <div class="chart-container"><canvas id="metricsChart"></canvas></div>
                     </div>
-                </div>
-                <div class="bg-amber-50 p-6 rounded-[2rem] border-l-8 border-amber-400 text-sm text-amber-800 italic">
-                    <strong>Nota MBA:</strong> Em processos de infraestrutura, um PCE acima de 25% é considerado excelente. No saneamento, onde o capital é intensivo, cada 1% de aumento no PCE economiza milhões em custo operacional.
                 </div>
             `;
-            setTimeout(initMetricsCharts, 100);
+            setTimeout(initMetricsCharts, 150);
         }
 
         function updateMetrics() {
-            const vaInput = document.getElementById('m-va');
-            const nvaInput = document.getElementById('m-nva');
-            const pceDisplay = document.getElementById('pce-val');
-            const gaugeText = document.getElementById('gauge-text');
-            const advice = document.getElementById('metrics-advice');
-
-            if (!vaInput || !nvaInput) return;
-
-            const va = parseFloat(vaInput.value) || 0;
-            const nva = parseFloat(nvaInput.value) || 0;
+            const va = parseFloat(document.getElementById('m-va').value) || 0;
+            const nva = parseFloat(document.getElementById('m-nva').value) || 0;
             const lt = va + nva;
             const pce = lt > 0 ? (va / lt) * 100 : 0;
-
-            if (pceDisplay) pceDisplay.innerText = pce.toFixed(2) + '%';
-            if (gaugeText) gaugeText.innerText = pce.toFixed(1) + '%';
-            
-            if (advice) {
-                if (pce < 5) {
-                    advice.innerText = "Estado Crítico: Foco urgente na redução de esperas.";
-                    advice.className = "text-[10px] mt-4 font-bold text-center px-4 uppercase text-red-500";
-                } else if (pce < 25) {
-                    advice.innerText = "Bom começo, mas há muito desperdício invisível.";
-                    advice.className = "text-[10px] mt-4 font-bold text-center px-4 uppercase text-amber-600";
-                } else {
-                    advice.innerText = "Eficiência de Classe Mundial no Saneamento.";
-                    advice.className = "text-[10px] mt-4 font-bold text-center px-4 uppercase text-emerald-600";
-                }
-            }
-
-            if (charts.metrics) {
-                charts.metrics.data.datasets[0].data = [va, nva];
-                charts.metrics.update();
-            }
-            if (charts.gauge) {
-                charts.gauge.data.datasets[0].data = [pce, 100 - pce];
-                let color = pce < 5 ? '#ef4444' : (pce < 25 ? '#eab308' : '#22c55e');
-                charts.gauge.data.datasets[0].backgroundColor = [color, '#f1f5f9'];
-                charts.gauge.update();
-            }
+            document.getElementById('pce-val').innerText = pce.toFixed(1) + '%';
+            if (charts.metrics) { charts.metrics.data.datasets[0].data = [va, nva]; charts.metrics.update(); }
         }
 
         function initMetricsCharts() {
-            const ctx1 = document.getElementById('metricsChart'); if(!ctx1) return;
-            charts.metrics = new Chart(ctx1.getContext('2d'), {
-                type: 'doughnut',
-                data: { labels: ['VA', 'NVA'], datasets: [{ data: [120, 2880], backgroundColor: ['#10b981', '#f87171'], borderWidth: 0 }] },
+            const ctx = document.getElementById('metricsChart'); if(!ctx) return;
+            charts.metrics = new Chart(ctx.getContext('2d'), {
+                type: 'doughnut', data: { labels: ['VA','NVA'], datasets: [{ data: [120, 2880], backgroundColor: ['#10b981', '#f87171'], borderWidth: 0 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-            });
-
-            const ctx2 = document.getElementById('gaugeChart'); if(!ctx2) return;
-            charts.gauge = new Chart(ctx2.getContext('2d'), {
-                type: 'doughnut',
-                data: { datasets: [{ data: [4, 96], backgroundColor: ['#0284c7', '#f1f5f9'], borderWidth: 0 }] },
-                options: { cutout: '80%', circumference: 180, rotation: 270, responsive: true, maintainAspectRatio: false, plugins: { tooltip: { enabled: false } } }
             });
             updateMetrics();
         }
 
         function renderVSM(el) {
             el.innerHTML = `
-                <div class="theory-section">
-                    <h2 class="text-2xl font-bold text-slate-900">Construindo o VSM</h2>
-                    <p class="text-slate-500">Mapeamento do Fluxo de Valor Passo a Passo.</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-8 rounded-[2rem] border shadow-sm transition-transform hover:-translate-y-1">
-                        <div class="flex items-center gap-4 mb-4">
-                            <span class="bg-sky-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-sky-100">1</span>
-                            <h4 class="font-bold text-slate-800">Definir Família de Produtos</h4>
-                        </div>
-                        <p class="text-xs text-slate-500 leading-relaxed ml-14">Não tente mapear tudo ao mesmo tempo. Escolha um processo crítico (ex: Ligação Nova de Água) que percorra etapas semelhantes.</p>
+                <div class="theory-section"><h2 class="text-2xl font-bold">Construindo o VSM</h2></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-6 rounded-3xl border shadow-sm">
+                        <div class="font-bold text-sky-700 mb-2">1. Família de Produtos</div>
+                        <p class="text-xs text-slate-500">Escolha um fluxo crítico, como Ligação de Água.</p>
                     </div>
-                    <div class="bg-white p-8 rounded-[2rem] border shadow-sm transition-transform hover:-translate-y-1">
-                        <div class="flex items-center gap-4 mb-4">
-                            <span class="bg-sky-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-sky-100">2</span>
-                            <h4 class="font-bold text-slate-800">Desenhar o Estado Atual</h4>
-                        </div>
-                        <p class="text-xs text-slate-500 leading-relaxed ml-14">Vá ao Gemba. Desenhe o fluxo real com seus gargalos e triângulos de estoque, não o que diz o manual da qualidade.</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-[2rem] border shadow-sm transition-transform hover:-translate-y-1">
-                        <div class="flex items-center gap-4 mb-4">
-                            <span class="bg-sky-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-sky-100">3</span>
-                            <h4 class="font-bold text-slate-800">Desenhar o Estado Futuro</h4>
-                        </div>
-                        <p class="text-xs text-slate-500 leading-relaxed ml-14">Projete o fluxo sem os desperdícios. Implemente o "Fluxo Contínuo" e sistemas "Puxados" onde for possível na rede.</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-[2rem] border shadow-sm transition-transform hover:-translate-y-1">
-                        <div class="flex items-center gap-4 mb-4">
-                            <span class="bg-sky-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-sky-100">4</span>
-                            <h4 class="font-bold text-slate-800">Plano de Ação</h4>
-                        </div>
-                        <p class="text-xs text-slate-500 leading-relaxed ml-14">O VSM é o mapa, o Plano Kaizen é o caminho. Use o Toyota Kata para gerenciar a transição entre estados.</p>
+                    <div class="bg-white p-6 rounded-3xl border shadow-sm">
+                        <div class="font-bold text-sky-700 mb-2">2. Estado Atual</div>
+                        <p class="text-xs text-slate-500">Vá ao Gemba. Desenhe o que realmente ocorre hoje.</p>
                     </div>
                 </div>
             `;
@@ -456,113 +331,47 @@
 
         function renderKata(el) {
             el.innerHTML = `
-                <div class="theory-section">
-                    <h2 class="text-2xl font-bold text-slate-900">Toyota Kata & Framework DVF</h2>
-                    <p class="text-slate-500">Desenvolvendo a rotina de melhoria sistemática e validação de inovações.</p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-10">
-                    <div>
-                        <h3 class="font-bold text-[10px] uppercase text-sky-600 mb-4 tracking-widest">Cartão de Coaching (Clique para virar)</h3>
-                        <div class="perspective-1500" onclick="document.getElementById('ki').classList.toggle('kata-card-flipped')">
-                            <div id="ki" class="kata-card-inner">
-                                <div class="kata-front">
-                                    <div class="text-[10px] font-bold text-blue-200 uppercase mb-4 tracking-tighter">Frente: Processo</div>
-                                    <h4 class="text-2xl font-black mb-10 italic">Kata de Melhoria</h4>
-                                    <ul class="space-y-6 text-sm font-semibold opacity-90">
-                                        <li class="flex gap-3"><span class="bg-white/20 w-6 h-6 flex items-center justify-center rounded-lg">1</span> Entenda a Direção</li>
-                                        <li class="flex gap-3"><span class="bg-white/20 w-6 h-6 flex items-center justify-center rounded-lg">2</span> Entenda a Condição Atual</li>
-                                        <li class="flex gap-3"><span class="bg-white/20 w-6 h-6 flex items-center justify-center rounded-lg">3</span> Estabeleça a Próxima Condição Alvo</li>
-                                        <li class="flex gap-3"><span class="bg-white/20 w-6 h-6 flex items-center justify-center rounded-lg">4</span> Experimente em direção ao Alvo</li>
-                                    </ul>
-                                    <p class="mt-auto text-center text-[10px] font-bold uppercase opacity-50 tracking-widest">Clique para ver o Verso</p>
-                                </div>
-                                <div class="kata-back">
-                                    <div class="text-[10px] font-bold text-blue-600 uppercase mb-4 tracking-tighter border-b pb-2">Verso: Coaching & Reflexão</div>
-                                    <div class="text-[11px] leading-relaxed space-y-1 mb-6 text-slate-600 font-medium">
-                                        <p>1. Qual é a Condição Alvo deste processo?</p>
-                                        <p>2. Qual a Condição Atual agora?</p>
-                                        <p>3. Quais obstáculos impedem você de alcançar o alvo?</p>
-                                        <p>4. Qual o seu Próximo Passo? (Experimento)</p>
-                                        <p>5. Quando poderemos ver o que aprendemos?</p>
-                                    </div>
-                                    <div class="bg-slate-50 p-5 rounded-3xl border border-slate-200">
-                                        <h5 class="text-[11px] font-black mb-3 uppercase tracking-tighter text-slate-800">Reflita sobre o Último Passo Feito</h5>
-                                        <p class="text-[10px] text-slate-400 mb-4 italic leading-tight">"Porque você realmente não sabe o resultado que o passo irá gerar!"</p>
-                                        <div class="space-y-3 text-[10px] text-slate-500 font-bold leading-tight">
-                                            <p class="border-b border-slate-200 pb-1"><span class="text-blue-600 mr-1">a)</span> O que você planejou no seu Último Passo?</p>
-                                            <p class="border-b border-slate-200 pb-1"><span class="text-blue-600 mr-1">b)</span> O que você Esperava?</p>
-                                            <p class="border-b border-slate-200 pb-1"><span class="text-blue-600 mr-1">c)</span> O que você Realmente Aconteceu?</p>
-                                            <p><span class="text-blue-600 mr-1">d)</span> O que você Aprendeu?</p>
-                                        </div>
-                                    </div>
-                                    <p class="mt-auto text-center text-[10px] font-bold uppercase opacity-50 tracking-widest">Voltar à Frente</p>
+                <div class="theory-section"><h2 class="text-2xl font-bold">Toyota Kata & DVF</h2></div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div class="perspective-1500" onclick="document.getElementById('ki').classList.toggle('kata-card-flipped')">
+                        <div id="ki" class="kata-card-inner">
+                            <div class="kata-front">
+                                <h4 class="text-2xl font-black mb-6">Kata de Melhoria</h4>
+                                <ul class="text-sm space-y-4 font-bold opacity-90">
+                                    <li>1. Entenda a Direção</li><li>2. Condição Atual</li><li>3. Condição Alvo</li><li>4. Experimente</li>
+                                </ul>
+                                <p class="mt-auto text-center text-xs opacity-50 uppercase">Toque para o Verso</p>
+                            </div>
+                            <div class="kata-back">
+                                <div class="text-[10px] font-bold text-blue-600 uppercase mb-2">Verso: Reflexão</div>
+                                <div class="bg-slate-50 p-4 rounded-2xl border text-[10px]">
+                                    <h5 class="font-bold mb-2">Último Passo Feito:</h5>
+                                    <p>a) Planejado? b) Esperado? c) Aconteceu? d) Aprendeu?</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col h-full">
-                        <h3 class="font-bold text-[10px] uppercase text-sky-600 mb-8 tracking-widest text-center">Framework DVF (Radar Chart)</h3>
-                        <div class="space-y-6 mb-10">
-                            <div>
-                                <div class="flex justify-between text-[10px] font-bold mb-1">
-                                    <span class="text-blue-600 uppercase">Desejabilidade</span>
-                                    <span id="d-val">8</span>
-                                </div>
-                                <input type="range" id="d-v" value="8" min="1" max="10" oninput="upDVF()" class="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer">
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] font-bold mb-1">
-                                    <span class="text-emerald-600 uppercase">Viabilidade</span>
-                                    <span id="v-val">7</span>
-                                </div>
-                                <input type="range" id="v-v" value="7" min="1" max="10" oninput="upDVF()" class="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer">
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] font-bold mb-1">
-                                    <span class="text-amber-600 uppercase">Praticidade (Feasibility)</span>
-                                    <span id="p-val">6</span>
-                                </div>
-                                <input type="range" id="f-v" value="6" min="1" max="10" oninput="upDVF()" class="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer">
-                            </div>
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border h-full min-h-[300px] relative">
+                        <h4 class="text-[10px] font-bold uppercase text-sky-600 mb-4 text-center">Framework DVF (Radar)</h4>
+                        <div class="h-48"><canvas id="dvfChart"></canvas></div>
+                        <div class="mt-6 space-y-2">
+                            <input type="range" id="d-v" value="7" min="1" max="10" oninput="upDVF()" class="w-full h-1 bg-slate-100">
                         </div>
-                        <div class="flex-1 min-h-[250px] relative"><canvas id="dvfChart"></canvas></div>
                     </div>
                 </div>
             `;
-            setTimeout(upDVF, 150);
+            setTimeout(upDVF, 200);
         }
 
         function upDVF() {
-            const dEl = document.getElementById('d-v');
-            const vEl = document.getElementById('v-v');
-            const fEl = document.getElementById('f-v');
-            const ctx = document.getElementById('dvfChart');
-            
-            if(!dEl || !vEl || !fEl || !ctx) return;
-
-            const d = dEl.value;
-            const v = vEl.value;
-            const f = fEl.value;
-
-            document.getElementById('d-val').innerText = d;
-            document.getElementById('v-val').innerText = v;
-            document.getElementById('p-val').innerText = f;
-
+            const ctx = document.getElementById('dvfChart'); if(!ctx) return;
             if (charts.dvf) charts.dvf.destroy();
             charts.dvf = new Chart(ctx.getContext('2d'), {
-                type: 'radar',
-                data: { labels: ['Desejabilidade','Viabilidade','Praticidade'], datasets: [{ label: 'Score do Experimento', data: [d, v, f], backgroundColor: 'rgba(2, 132, 199, 0.2)', borderColor: '#0284c7', borderWidth: 2, pointBackgroundColor: '#0284c7' }] },
-                options: { scales: { r: { min: 0, max: 10, ticks: { display: false } } }, plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
+                type: 'radar', data: { labels: ['D','V','F'], datasets: [{ data: [7, 6, 8], backgroundColor: 'rgba(2, 132, 199, 0.2)', borderColor: '#0284c7' }] },
+                options: { scales: { r: { min: 0, max: 10, ticks: { display: false } } }, responsive: true, maintainAspectRatio: false }
             });
         }
 
-        function toggleMobileMenu() {
-            // Not implemented but available for future expansion
-        }
-
-        // --- Init ---
         window.onload = () => nav('intro');
     </script>
 </body>
