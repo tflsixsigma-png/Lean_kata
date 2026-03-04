@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBA Projetos COPASA - Prof. Thiago Lima - Gestão Lean</title>
+    <title>MBA Projetos COPASA - Prof. Thiago Lima - Módulo Lean</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
         
-        body { font-family: 'Inter', sans-serif; background-color: #f0f9ff; color: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background-color: #f0f9ff; color: #1e293b; -webkit-tap-highlight-color: transparent; }
 
         /* Scrollbar Personalizada */
         ::-webkit-scrollbar { width: 6px; }
@@ -21,8 +21,8 @@
         .kata-card-inner {
             position: relative;
             width: 100%;
-            height: 620px;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 580px;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
             cursor: pointer;
         }
@@ -33,78 +33,60 @@
             height: 100%;
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
-            border-radius: 2rem;
+            border-radius: 1.5rem;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
         }
         .kata-front {
             background: linear-gradient(145deg, #1e3a8a, #1e40af);
             color: white;
-            border: 4px solid #1d4ed8;
-            padding: 2rem;
+            border: 3px solid #1d4ed8;
         }
         .kata-back {
             background-color: white;
             color: #1e293b;
             transform: rotateY(180deg);
-            border: 4px solid #e2e8f0;
-            padding: 1.5rem;
+            border: 3px solid #e2e8f0;
+            overflow-y: auto;
         }
 
-        .chart-container { position: relative; width: 100%; height: 280px; margin: 0 auto; }
+        .chart-container { position: relative; width: 100%; height: 250px; margin: 0 auto; }
         
-        .nav-btn { transition: all 0.3s; border-left: 4px solid transparent; width: 100%; text-align: left; }
-        .nav-active { background-color: #0284c7; border-left: 4px solid #0c4a6e; color: white !important; }
+        .nav-btn { transition: all 0.2s; border-left: 4px solid transparent; width: 100%; text-align: left; }
+        .nav-active { background-color: #f0f9ff; border-left: 4px solid #0284c7; color: #0284c7 !important; font-weight: 700; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.3s ease-out forwards; }
         
-        .theory-section { border-left: 4px solid #0284c7; padding-left: 1.5rem; margin-bottom: 2rem; }
+        .theory-section { border-left: 4px solid #0284c7; padding-left: 1rem; margin-bottom: 1.5rem; }
         
-        .game-btn { transition: all 0.2s; }
+        .game-btn { transition: all 0.2s; touch-action: manipulation; }
         .game-btn:active { transform: scale(0.95); }
 
-        table { border-collapse: separate; border-spacing: 0; width: 100%; }
-        th { background-color: #f8fafc; color: #475569; font-weight: 700; text-transform: uppercase; font-size: 0.65rem; letter-spacing: 0.05em; padding: 1rem; border-bottom: 2px solid #e2e8f0; }
-        td { padding: 1rem; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th { background-color: #f8fafc; text-align: left; padding: 0.75rem; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; color: #64748b; }
+        td { padding: 0.75rem; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
 
-        /* Header Mobile Fix */
-        .mobile-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; background: white; border-bottom: 1px solid #e2e8f0; }
+        /* Mobile Adjustments */
+        #mobile-nav { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
+        #mobile-nav.open { transform: translateX(0); }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body class="flex h-screen overflow-hidden bg-slate-50">
 
-    <!-- Header Mobile -->
-    <div class="mobile-header lg:hidden">
-        <span class="font-black text-sky-700">MBA COPASA</span>
-        <button id="menu-toggle-btn" class="p-2 text-sky-700 text-2xl focus:outline-none">☰</button>
-    </div>
-
-    <!-- Sidebar Navigation (Desktop) -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 lg:static lg:block w-72 bg-white shadow-xl z-[60] transition-transform duration-300 ease-in-out shrink-0 flex flex-col">
-        <div class="p-8 border-b border-gray-100 hidden lg:block">
+    <!-- Desktop Sidebar -->
+    <aside class="hidden lg:flex w-72 bg-white shadow-2xl flex-col z-20 shrink-0">
+        <div class="p-8 border-b border-gray-100">
             <h1 class="text-2xl font-black text-sky-700 leading-tight">MBA COPASA</h1>
             <p class="text-[10px] text-gray-500 mt-1 font-bold uppercase tracking-widest">Gestão de Projetos & Lean</p>
         </div>
-        
-        <!-- Mobile Sidebar Close Button -->
-        <div class="p-4 border-b lg:hidden flex justify-between items-center bg-sky-50">
-            <span class="font-bold text-sky-800">Navegação</span>
-            <button id="menu-close-btn" class="text-2xl text-sky-800">✕</button>
-        </div>
-
         <nav class="flex-1 overflow-y-auto py-6">
-            <ul class="space-y-1">
-                <li><button onclick="nav('intro')" id="nav-intro" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">1. Alinhamento Estratégico</button></li>
-                <li><button onclick="nav('cultura')" id="nav-cultura" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">2. Cultura & VA/NVA</button></li>
-                <li><button onclick="nav('lab')" id="nav-lab" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">3. Laboratório VA/NVA</button></li>
-                <li><button onclick="nav('metrics')" id="nav-metrics" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">4. Simulador de Métricas</button></li>
-                <li><button onclick="nav('vsm')" id="nav-vsm" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">5. Construindo o VSM</button></li>
-                <li><button onclick="nav('kata')" id="nav-kata" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">6. Toyota Kata & DVF</button></li>
+            <ul id="desktop-menu-list" class="space-y-1">
+                <!-- Links inseridos via JS para manter consistência -->
             </ul>
         </nav>
-        
         <div class="p-6 border-t border-gray-100 flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center text-white font-bold text-sm">TL</div>
             <div>
@@ -114,93 +96,138 @@
         </div>
     </aside>
 
-    <!-- Overlay para fechar menu no mobile -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-[55] hidden lg:hidden"></div>
+    <!-- Mobile Header -->
+    <div class="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white shadow-md z-40 flex items-center justify-between px-6">
+        <div class="flex flex-col">
+            <span class="font-black text-sky-700 text-lg leading-none">MBA COPASA</span>
+            <span class="text-[10px] text-gray-400 font-bold uppercase">Prof. Thiago Lima</span>
+        </div>
+        <button id="menu-toggle" class="p-2 text-sky-700 text-2xl focus:outline-none">☰</button>
+    </div>
+
+    <!-- Mobile Slide-over Nav -->
+    <div id="mobile-nav-overlay" class="lg:hidden fixed inset-0 bg-slate-900/50 z-50 hidden opacity-0 transition-opacity duration-300"></div>
+    <aside id="mobile-nav" class="lg:hidden fixed inset-y-0 left-0 w-4/5 max-w-sm bg-white z-[60] shadow-2xl flex flex-col">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h2 class="font-black text-sky-700">NAVEGAÇÃO</h2>
+            <button id="menu-close" class="text-2xl text-gray-400">✕</button>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul id="mobile-menu-list" class="space-y-1">
+                <!-- Links inseridos via JS -->
+            </ul>
+        </nav>
+    </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto p-6 md:p-12 pt-20 lg:pt-12" id="scroll-target">
-        <div id="content-area" class="max-w-5xl mx-auto">
-            <!-- Dynamic Content -->
+    <main class="flex-1 overflow-y-auto pt-16 lg:pt-0" id="scroll-target">
+        <div id="content-area" class="p-4 md:p-12 max-w-5xl mx-auto">
+            <!-- Renderização Dinâmica -->
         </div>
     </main>
 
     <script>
-        // --- State ---
-        let charts = {};
-        let score = 0;
-        let currentActivityIndex = 0;
-
-        const activities = [
-            { t: "Consertando cano rompido no campo", type: "VA", hint: "Transforma o problema em solução para o cliente." },
-            { t: "Caminhão parado no trânsito urbano", type: "NVA", hint: "O cliente não paga por trânsito; é um desperdício logístico." },
-            { t: "Preenchendo relatório para Arsae-MG", type: "NNVA", hint: "Obrigatório por lei (Necessário mas s/ Valor direto)." },
-            { t: "Tratamento físico-químico da água", type: "VA", hint: "Agrega valor direto: torna a água potável." },
-            { t: "Aguardando assinatura para liberar obra", type: "NVA", hint: "Fila e espera; desperdício de tempo." },
-            { t: "Retrabalho de recomposição de calçada", type: "NVA", hint: "Fazer de novo é desperdício de recurso." }
+        // --- Configurações de Dados ---
+        const menuItems = [
+            { id: 'intro', label: '1. Alinhamento Estratégico' },
+            { id: 'cultura', label: '2. Cultura & VA/NVA' },
+            { id: 'lab', label: '3. Laboratório Classificação' },
+            { id: 'metrics', label: '4. Simulador de Métricas' },
+            { id: 'vsm', label: '5. Construindo o VSM' },
+            { id: 'kata', label: '6. Toyota Kata & DVF' }
         ];
 
-        // --- Mobile Menu Logic ---
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        const toggleBtn = document.getElementById('menu-toggle-btn');
-        const closeBtn = document.getElementById('menu-close-btn');
+        const activities = [
+            { t: "Reparo de tubulação rompida", type: "VA", hint: "Transformação real do serviço para o cliente." },
+            { t: "Equipe aguardando liberação asfáltica", type: "NVA", hint: "Pura espera; o cliente não quer pagar por atrasos." },
+            { t: "Preenchimento de relatórios da Arsae-MG", type: "NNVA", hint: "Obrigatório por lei, mas não agrega valor direto ao produto água." },
+            { t: "Tratamento químico na ETA", type: "VA", hint: "Atividade essencial que torna a água potável." },
+            { t: "Deslocamento excessivo por falta de ferramentas", type: "NVA", hint: "Desperdício de movimento e transporte." },
+            { t: "Inspeção de segurança do trabalho", type: "NNVA", hint: "Essencial para a vida do colaborador, embora não mude o produto." }
+        ];
 
-        function toggleMenu() {
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
+        let charts = {};
+        let gameState = { score: 0, index: 0 };
+
+        // --- Inicialização de Menus ---
+        function buildMenus() {
+            const desktopList = document.getElementById('desktop-menu-list');
+            const mobileList = document.getElementById('mobile-menu-list');
+            
+            menuItems.forEach(item => {
+                const li = `<li><button onclick="nav('${item.id}')" id="nav-${item.id}" class="nav-btn px-8 py-3 text-sm font-semibold text-gray-600 hover:bg-sky-50">${item.label}</button></li>`;
+                desktopList.innerHTML += li;
+                mobileList.innerHTML += li;
+            });
         }
 
-        toggleBtn.onclick = toggleMenu;
-        closeBtn.onclick = toggleMenu;
-        overlay.onclick = toggleMenu;
-
-        // --- Navigation ---
-        function nav(page) {
-            const container = document.getElementById('content-area');
-            container.innerHTML = '';
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active', 'text-white'));
-            const activeBtn = document.getElementById(`nav-${page}`);
-            if (activeBtn) activeBtn.classList.add('nav-active');
-            
-            const section = document.createElement('div');
-            section.className = 'animate-fade';
-            container.appendChild(section); 
-            
-            document.getElementById('scroll-target').scrollTop = 0;
-            if (!sidebar.classList.contains('-translate-x-full')) toggleMenu(); // Fecha menu no mobile após clicar
-
-            switch(page) {
-                case 'intro': renderIntro(section); break;
-                case 'cultura': renderCultura(section); break;
-                case 'lab': renderLab(section); break;
-                case 'metrics': renderMetrics(section); break;
-                case 'vsm': renderVSM(section); break;
-                case 'kata': renderKata(section); break;
+        // --- Lógica de Menu Mobile ---
+        const mobileNav = document.getElementById('mobile-nav');
+        const mobileOverlay = document.getElementById('mobile-nav-overlay');
+        
+        function toggleMenu(show) {
+            if (show) {
+                mobileNav.classList.add('open');
+                mobileOverlay.classList.remove('hidden');
+                setTimeout(() => mobileOverlay.classList.add('opacity-100'), 10);
+            } else {
+                mobileNav.classList.remove('open');
+                mobileOverlay.classList.remove('opacity-100');
+                setTimeout(() => mobileOverlay.classList.add('hidden'), 300);
             }
         }
+
+        document.getElementById('menu-toggle').onclick = () => toggleMenu(true);
+        document.getElementById('menu-close').onclick = () => toggleMenu(false);
+        mobileOverlay.onclick = () => toggleMenu(false);
+
+        // --- Navegação Principal ---
+        function nav(page) {
+            const container = document.getElementById('content-area');
+            container.innerHTML = `<div class="animate-fade" id="page-${page}"></div>`;
+            const el = document.getElementById(`page-${page}`);
+            
+            // Atualiza botões ativos
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active'));
+            document.querySelectorAll(`[id="nav-${page}"]`).forEach(btn => btn.classList.add('nav-active'));
+            
+            toggleMenu(false);
+            document.getElementById('scroll-target').scrollTop = 0;
+
+            switch(page) {
+                case 'intro': renderIntro(el); break;
+                case 'cultura': renderCultura(el); break;
+                case 'lab': renderLab(el); break;
+                case 'metrics': renderMetrics(el); break;
+                case 'vsm': renderVSM(el); break;
+                case 'kata': renderKata(el); break;
+            }
+        }
+
+        // --- Renderização de Abas ---
 
         function renderIntro(el) {
             el.innerHTML = `
                 <div class="theory-section">
-                    <h2 class="text-2xl md:text-3xl font-black text-slate-900">Alinhamento Estratégico</h2>
-                    <p class="text-slate-500">Missão, Visão e Valores no Contexto Lean</p>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 leading-tight">Alinhamento Estratégico Lean</h2>
+                    <p class="text-slate-500">A identidade corporativa da COPASA como base da excelência.</p>
                 </div>
                 
                 <div class="bg-white rounded-3xl shadow-sm p-6 md:p-8 mb-8 border border-slate-100">
-                    <p class="text-slate-600 mb-6 text-sm md:text-base leading-relaxed">
-                        A identidade corporativa da COPASA serve como o alicerce para a implementação da cultura Lean. Quando a organização define sua missão como a prestação de serviços com excelência, ela está definindo o <strong>"Valor"</strong> que o cliente espera receber.
+                    <p class="text-slate-600 mb-6 text-sm leading-relaxed">
+                        Quando a COPASA define sua missão como a prestação de serviços de saneamento com excelência, ela está definindo o <strong>"Valor"</strong> que o cliente espera. Qualquer atividade que não contribua diretamente para isso é desperdício.
                     </p>
                     
-                    <div class="overflow-x-auto rounded-2xl border border-slate-200">
-                        <table class="min-w-[600px]">
+                    <div class="overflow-x-auto rounded-xl border border-slate-200">
+                        <table>
                             <thead>
                                 <tr><th>Elemento</th><th>Definição COPASA</th><th>Ótica Lean</th></tr>
                             </thead>
                             <tbody>
-                                <tr><td class="font-bold text-sky-700">Missão</td><td>Prestar serviços de saneamento com ética e integridade.</td><td>Entrega de valor máximo eliminando burocracias.</td></tr>
-                                <tr><td class="font-bold text-sky-700">Visão</td><td>Ser referência em soluções de saneamento em MG.</td><td>Melhoria contínua (Kaizen) para eficiência mundial.</td></tr>
-                                <tr><td class="font-bold text-sky-700">Valores</td><td>Transparência, honestidade e excelência.</td><td>Respeito pelas pessoas e decisões baseadas em dados.</td></tr>
+                                <tr><td><strong>Missão</strong></td><td>Prestar serviços de saneamento com ética e integridade.</td><td>Entrega de valor máximo ao cidadão sem burocracias inúteis.</td></tr>
+                                <tr><td><strong>Visão</strong></td><td>Ser referência em soluções de saneamento em MG.</td><td>Melhoria contínua (Kaizen) para eficiência mundial.</td></tr>
+                                <tr><td><strong>Valores</strong></td><td>Responsabilidade, transparência e excelência.</td><td>Respeito pelas pessoas e decisões baseadas em dados.</td></tr>
+                                <tr><td><strong>Propósito</strong></td><td>Gerar valor social e ambiental nas comunidades.</td><td>Eco-eficiência: maximizar impacto reduzindo consumo de recursos.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -210,19 +237,22 @@
 
         function renderCultura(el) {
             el.innerHTML = `
-                <div class="theory-section"><h2 class="text-2xl font-bold">VA, NVA e NNVA</h2></div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="theory-section"><h2 class="text-2xl font-bold">Cultura Lean: VA, NVA e NNVA</h2></div>
+                <div class="grid grid-cols-1 gap-4 mb-8">
                     <div class="bg-emerald-50 p-6 rounded-3xl border-2 border-emerald-100">
-                        <div class="font-bold text-emerald-800 mb-2">VA (Valor Agregado)</div>
-                        <p class="text-xs text-emerald-700 leading-tight italic">O cliente paga por isso.</p>
+                        <h4 class="font-bold text-emerald-800 flex items-center gap-2"><span>✅</span> VA (Valor Agregado)</h4>
+                        <p class="text-xs text-emerald-700 mt-2">Atividades que transformam o produto ou serviço. É pelo que o cliente mineiro paga.</p>
+                        <span class="text-[10px] font-black text-emerald-500 mt-2 block uppercase">Ex: Tratar a água</span>
                     </div>
                     <div class="bg-amber-50 p-6 rounded-3xl border-2 border-amber-100">
-                        <div class="font-bold text-amber-800 mb-2">NNVA (Obrigatório)</div>
-                        <p class="text-xs text-amber-700 leading-tight italic">Exigências legais e segurança.</p>
+                        <h4 class="font-bold text-amber-800 flex items-center gap-2"><span>⚠️</span> NNVA (Necessário mas s/ Valor)</h4>
+                        <p class="text-xs text-amber-700 mt-2">Atividades exigidas por lei ou tecnologia, mas que não agregam valor direto ao cliente.</p>
+                        <span class="text-[10px] font-black text-amber-500 mt-2 block uppercase">Ex: Relatório ARSAE</span>
                     </div>
                     <div class="bg-red-50 p-6 rounded-3xl border-2 border-red-100">
-                        <div class="font-bold text-red-800 mb-2">NVA (Desperdício)</div>
-                        <p class="text-xs text-red-700 leading-tight italic">Elimine imediatamente.</p>
+                        <h4 class="font-bold text-red-800 flex items-center gap-2"><span>❌</span> NVA (Desperdício)</h4>
+                        <p class="text-xs text-red-700 mt-2">Consome tempo e recurso sem gerar nenhum valor. Deve ser eliminado imediatamente.</p>
+                        <span class="text-[10px] font-black text-red-500 mt-2 block uppercase">Ex: Espera por assinatura</span>
                     </div>
                 </div>
             `;
@@ -230,72 +260,81 @@
 
         function renderLab(el) {
             el.innerHTML = `
-                <div class="theory-section"><h2 class="text-2xl font-bold">Laboratório de Classificação</h2></div>
+                <div class="theory-section"><h2 class="text-2xl font-bold">Laboratório VA/NVA</h2></div>
                 <div class="bg-white p-6 md:p-10 rounded-[2.5rem] shadow-xl border border-slate-100 text-center">
-                    <div id="game-score" class="mb-4 bg-sky-100 text-sky-700 px-4 py-1 rounded-full font-bold text-xs inline-block">Acertos: ${score}</div>
-                    <div class="min-h-[140px] flex items-center justify-center bg-slate-50 rounded-[2rem] border-2 border-dashed border-slate-200 p-6 mb-8">
-                        <p id="activity-text" class="text-xl font-bold text-slate-800"></p>
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Atividade de Campo</span>
+                        <div id="lab-score" class="bg-sky-100 text-sky-700 px-4 py-1 rounded-full font-bold text-xs">Acertos: ${gameState.score}</div>
+                    </div>
+                    <div class="min-h-[140px] flex items-center justify-center bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 p-6 mb-8">
+                        <p id="lab-text" class="text-xl font-bold text-slate-800 leading-tight"></p>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <button onclick="checkAnswer('VA')" class="game-btn bg-emerald-500 text-white p-4 rounded-2xl font-bold">VA</button>
-                        <button onclick="checkAnswer('NNVA')" class="game-btn bg-amber-500 text-white p-4 rounded-2xl font-bold">NNVA</button>
-                        <button onclick="checkAnswer('NVA')" class="game-btn bg-red-500 text-white p-4 rounded-2xl font-bold">NVA</button>
+                        <button onclick="checkLab('VA')" class="game-btn bg-emerald-500 text-white p-4 rounded-2xl font-bold">VA</button>
+                        <button onclick="checkLab('NNVA')" class="game-btn bg-amber-500 text-white p-4 rounded-2xl font-bold">NNVA</button>
+                        <button onclick="checkLab('NVA')" class="game-btn bg-red-500 text-white p-4 rounded-2xl font-bold">NVA</button>
                     </div>
-                    <div id="game-feedback" class="mt-6 text-sm font-bold h-6"></div>
+                    <div id="lab-feedback" class="mt-6 text-sm font-bold h-6 flex items-center justify-center"></div>
                 </div>
             `;
-            initLabActivity();
+            updateLabUI();
         }
 
-        function initLabActivity() {
-            const txt = document.getElementById('activity-text');
-            if (!txt) return;
-            if (currentActivityIndex < activities.length) {
-                txt.innerText = activities[currentActivityIndex].t;
+        function updateLabUI() {
+            const txt = document.getElementById('lab-text');
+            if (gameState.index < activities.length) {
+                txt.innerText = activities[gameState.index].t;
             } else {
-                txt.innerHTML = "<span class='text-sky-600'>Laboratório Concluído! 🏆</span>";
+                txt.innerHTML = "<div class='text-center'><p class='text-sky-600 font-black'>LABORATÓRIO CONCLUÍDO! 🏆</p><button onclick='resetLab()' class='text-[10px] mt-4 uppercase underline text-slate-400'>Reiniciar</button></div>";
             }
         }
 
-        function checkAnswer(ans) {
-            if (currentActivityIndex >= activities.length) return;
-            const fb = document.getElementById('game-feedback');
-            if (ans === activities[currentActivityIndex].type) {
-                score++;
-                fb.innerText = "Correto! " + activities[currentActivityIndex].hint;
-                fb.className = "mt-6 text-sm font-bold text-emerald-600";
-                document.getElementById('game-score').innerText = "Acertos: " + score;
-                setTimeout(() => { currentActivityIndex++; fb.innerText = ""; initLabActivity(); }, 1500);
+        function checkLab(ans) {
+            if (gameState.index >= activities.length) return;
+            const fb = document.getElementById('lab-feedback');
+            if (ans === activities[gameState.index].type) {
+                gameState.score++;
+                fb.innerText = "Correto! " + activities[gameState.index].hint;
+                fb.className = "mt-6 text-sm font-bold text-emerald-600 animate-bounce";
+                document.getElementById('lab-score').innerText = "Acertos: " + gameState.score;
+                setTimeout(() => { gameState.index++; fb.innerText = ""; updateLabUI(); }, 2000);
             } else {
-                fb.innerText = "Ops! Reflita sobre o valor para o cliente.";
-                fb.className = "mt-6 text-sm font-bold text-red-500";
+                fb.innerText = "Ops! Pense se o cliente pagaria por isso.";
+                fb.className = "mt-6 text-sm font-bold text-red-500 animate-pulse";
             }
         }
+
+        function resetLab() { gameState.score = 0; gameState.index = 0; nav('lab'); }
 
         function renderMetrics(el) {
             el.innerHTML = `
-                <div class="theory-section"><h2 class="text-2xl font-bold">Simulador de Métricas</h2></div>
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <div class="lg:col-span-4 bg-white p-6 rounded-[2rem] shadow-sm border space-y-6">
+                <div class="theory-section"><h2 class="text-2xl font-bold">Simulador de Eficiência (PCE)</h2></div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border space-y-4">
+                        <h4 class="text-xs font-bold uppercase text-slate-400 tracking-widest">Cálculo de Lead Time</h4>
                         <div>
-                            <label class="text-[10px] font-bold uppercase mb-1 block">Tempo VA (Ativo)</label>
-                            <input type="number" id="m-va" value="120" oninput="updateMetrics()" class="w-full p-4 bg-emerald-50 border-2 border-emerald-100 rounded-2xl font-bold">
+                            <label class="text-[10px] font-bold text-emerald-600 uppercase block mb-1">Tempo VA (Ativo)</label>
+                            <input type="number" id="m-va" value="120" oninput="upMet()" class="w-full p-4 bg-emerald-50 border-2 border-emerald-100 rounded-2xl font-bold text-lg">
                         </div>
                         <div>
-                            <label class="text-[10px] font-bold uppercase mb-1 block">Tempo NVA (Espera)</label>
-                            <input type="number" id="m-nva" value="2880" oninput="updateMetrics()" class="w-full p-4 bg-red-50 border-2 border-red-100 rounded-2xl font-bold">
+                            <label class="text-[10px] font-bold text-red-600 uppercase block mb-1">Tempo NVA (Esperas)</label>
+                            <input type="number" id="m-nva" value="2880" oninput="upMet()" class="w-full p-4 bg-red-50 border-2 border-red-100 rounded-2xl font-bold text-lg">
                         </div>
-                        <div class="text-center pt-4 border-t"><div id="pce-val" class="text-4xl font-black text-blue-600">0%</div><span class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">PCE</span></div>
+                        <div class="pt-4 border-t text-center">
+                            <div class="text-[10px] text-slate-400 font-bold uppercase mb-1 tracking-widest">PCE (Eficiência)</div>
+                            <div id="pce-val" class="text-5xl font-black text-sky-600">0%</div>
+                        </div>
                     </div>
-                    <div class="lg:col-span-8 bg-white p-6 rounded-[2rem] shadow-sm border">
-                        <div class="chart-container"><canvas id="metricsChart"></canvas></div>
+                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border flex flex-col items-center justify-center">
+                        <h4 class="text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-4">VA vs NVA</h4>
+                        <div class="chart-container"><canvas id="metChart"></canvas></div>
                     </div>
                 </div>
             `;
-            setTimeout(initMetricsCharts, 150);
+            setTimeout(initMetChart, 100);
         }
 
-        function updateMetrics() {
+        function upMet() {
             const va = parseFloat(document.getElementById('m-va').value) || 0;
             const nva = parseFloat(document.getElementById('m-nva').value) || 0;
             const lt = va + nva;
@@ -304,26 +343,38 @@
             if (charts.metrics) { charts.metrics.data.datasets[0].data = [va, nva]; charts.metrics.update(); }
         }
 
-        function initMetricsCharts() {
-            const ctx = document.getElementById('metricsChart'); if(!ctx) return;
+        function initMetChart() {
+            const ctx = document.getElementById('metChart'); if(!ctx) return;
             charts.metrics = new Chart(ctx.getContext('2d'), {
-                type: 'doughnut', data: { labels: ['VA','NVA'], datasets: [{ data: [120, 2880], backgroundColor: ['#10b981', '#f87171'], borderWidth: 0 }] },
+                type: 'doughnut', data: { labels: ['VA', 'NVA'], datasets: [{ data: [120, 2880], backgroundColor: ['#10b981', '#f87171'], borderWidth: 0 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
             });
-            updateMetrics();
+            upMet();
         }
 
         function renderVSM(el) {
             el.innerHTML = `
-                <div class="theory-section"><h2 class="text-2xl font-bold">Construindo o VSM</h2></div>
+                <div class="theory-section"><h2 class="text-2xl font-bold">4 Passos para o VSM</h2></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-white p-6 rounded-3xl border shadow-sm">
-                        <div class="font-bold text-sky-700 mb-2">1. Família de Produtos</div>
-                        <p class="text-xs text-slate-500">Escolha um fluxo crítico, como Ligação de Água.</p>
+                        <div class="bg-sky-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold mb-3">1</div>
+                        <h4 class="font-bold text-slate-800">Família de Produtos</h4>
+                        <p class="text-xs text-slate-500 mt-2">Escolha um fluxo crítico (ex: Ligação de Água) que siga etapas similares.</p>
                     </div>
                     <div class="bg-white p-6 rounded-3xl border shadow-sm">
-                        <div class="font-bold text-sky-700 mb-2">2. Estado Atual</div>
-                        <p class="text-xs text-slate-500">Vá ao Gemba. Desenhe o que realmente ocorre hoje.</p>
+                        <div class="bg-sky-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold mb-3">2</div>
+                        <h4 class="font-bold text-slate-800">Estado Atual</h4>
+                        <p class="text-xs text-slate-500 mt-2">Vá ao Gemba. Desenhe o que realmente acontece hoje, com gargalos e estoques.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border shadow-sm">
+                        <div class="bg-sky-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold mb-3">3</div>
+                        <h4 class="font-bold text-slate-800">Estado Futuro</h4>
+                        <p class="text-xs text-slate-500 mt-2">Projete o fluxo ideal sem os desperdícios. Implemente fluxo contínuo.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border shadow-sm">
+                        <div class="bg-sky-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold mb-3">4</div>
+                        <h4 class="font-bold text-slate-800">Plano de Ação</h4>
+                        <p class="text-xs text-slate-500 mt-2">Crie o Plano Kaizen. O VSM é o mapa, a melhoria é o caminho.</p>
                     </div>
                 </div>
             `;
@@ -331,48 +382,78 @@
 
         function renderKata(el) {
             el.innerHTML = `
-                <div class="theory-section"><h2 class="text-2xl font-bold">Toyota Kata & DVF</h2></div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="theory-section"><h2 class="text-2xl font-bold">Kata & Framework DVF</h2></div>
+                <div class="grid grid-cols-1 gap-10">
                     <div class="perspective-1500" onclick="document.getElementById('ki').classList.toggle('kata-card-flipped')">
                         <div id="ki" class="kata-card-inner">
                             <div class="kata-front">
-                                <h4 class="text-2xl font-black mb-6">Kata de Melhoria</h4>
-                                <ul class="text-sm space-y-4 font-bold opacity-90">
-                                    <li>1. Entenda a Direção</li><li>2. Condição Atual</li><li>3. Condição Alvo</li><li>4. Experimente</li>
+                                <div class="text-[10px] font-bold text-blue-200 uppercase mb-4 tracking-widest">Frente: Processo</div>
+                                <h4 class="text-2xl font-black mb-8 italic">Kata de Melhoria</h4>
+                                <ul class="space-y-4 text-sm font-semibold opacity-90">
+                                    <li>1. Entenda a Direção</li>
+                                    <li>2. Entenda a Condição Atual</li>
+                                    <li>3. Estabeleça a Próxima Condição Alvo</li>
+                                    <li>4. Experimente em direção ao Alvo</li>
                                 </ul>
-                                <p class="mt-auto text-center text-xs opacity-50 uppercase">Toque para o Verso</p>
+                                <p class="mt-auto text-center text-[10px] font-bold uppercase opacity-50 tracking-widest">Toque para ver o Verso</p>
                             </div>
                             <div class="kata-back">
-                                <div class="text-[10px] font-bold text-blue-600 uppercase mb-2">Verso: Reflexão</div>
-                                <div class="bg-slate-50 p-4 rounded-2xl border text-[10px]">
-                                    <h5 class="font-bold mb-2">Último Passo Feito:</h5>
-                                    <p>a) Planejado? b) Esperado? c) Aconteceu? d) Aprendeu?</p>
+                                <div class="text-[10px] font-bold text-blue-600 uppercase mb-4 tracking-tighter border-b pb-2">Verso: Coaching & Reflexão</div>
+                                <div class="text-[11px] space-y-1 mb-4 text-slate-600 font-medium">
+                                    <p>1. Qual é a Condição Alvo?</p>
+                                    <p>2. Qual a Condição Atual agora?</p>
+                                    <p>3. Quais obstáculos impedem você?</p>
+                                    <p>4. Qual o seu Próximo Passo?</p>
+                                    <p>5. Quando poderemos ver o aprendizado?</p>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                                    <h5 class="text-[11px] font-black mb-2 uppercase text-slate-800">Reflita sobre o Último Passo Feito</h5>
+                                    <div class="space-y-2 text-[10px] text-slate-500 font-bold leading-tight">
+                                        <p class="border-b pb-1"><span class="text-blue-600 mr-1">a)</span> Planejou no Último Passo?</p>
+                                        <p class="border-b pb-1"><span class="text-blue-600 mr-1">b)</span> O que Esperava?</p>
+                                        <p class="border-b pb-1"><span class="text-blue-600 mr-1">c)</span> O que Realmente Aconteceu?</p>
+                                        <p><span class="text-blue-600 mr-1">d)</span> O que Você Aprendeu?</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border h-full min-h-[300px] relative">
-                        <h4 class="text-[10px] font-bold uppercase text-sky-600 mb-4 text-center">Framework DVF (Radar)</h4>
-                        <div class="h-48"><canvas id="dvfChart"></canvas></div>
-                        <div class="mt-6 space-y-2">
-                            <input type="range" id="d-v" value="7" min="1" max="10" oninput="upDVF()" class="w-full h-1 bg-slate-100">
+
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border">
+                        <h4 class="text-xs font-bold uppercase text-sky-600 mb-6 text-center tracking-widest">Framework DVF (Experimentos)</h4>
+                        <div class="space-y-4 mb-8">
+                            <div><label class="text-[10px] font-bold uppercase flex justify-between">Desejabilidade <span id="dvf-d-v">8</span></label><input type="range" id="dvf-d" value="8" min="1" max="10" oninput="upDVF()" class="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer"></div>
+                            <div><label class="text-[10px] font-bold uppercase flex justify-between">Viabilidade <span id="dvf-v-v">7</span></label><input type="range" id="dvf-v" value="7" min="1" max="10" oninput="upDVF()" class="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer"></div>
+                            <div><label class="text-[10px] font-bold uppercase flex justify-between">Praticidade <span id="dvf-p-v">6</span></label><input type="range" id="dvf-p" value="6" min="1" max="10" oninput="upDVF()" class="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer"></div>
                         </div>
+                        <div class="chart-container"><canvas id="dvfChart"></canvas></div>
                     </div>
                 </div>
             `;
-            setTimeout(upDVF, 200);
+            setTimeout(upDVF, 100);
         }
 
         function upDVF() {
+            const d = document.getElementById('dvf-d').value;
+            const v = document.getElementById('dvf-v').value;
+            const p = document.getElementById('dvf-p').value;
+            document.getElementById('dvf-d-v').innerText = d;
+            document.getElementById('dvf-v-v').innerText = v;
+            document.getElementById('dvf-p-v').innerText = p;
+
             const ctx = document.getElementById('dvfChart'); if(!ctx) return;
             if (charts.dvf) charts.dvf.destroy();
             charts.dvf = new Chart(ctx.getContext('2d'), {
-                type: 'radar', data: { labels: ['D','V','F'], datasets: [{ data: [7, 6, 8], backgroundColor: 'rgba(2, 132, 199, 0.2)', borderColor: '#0284c7' }] },
-                options: { scales: { r: { min: 0, max: 10, ticks: { display: false } } }, responsive: true, maintainAspectRatio: false }
+                type: 'radar', data: { labels: ['D','V','F'], datasets: [{ data: [d, v, p], backgroundColor: 'rgba(2, 132, 199, 0.2)', borderColor: '#0284c7', pointBackgroundColor: '#0284c7' }] },
+                options: { scales: { r: { min: 0, max: 10, ticks: { display: false } } }, plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
             });
         }
 
-        window.onload = () => nav('intro');
+        // --- Inicialização Geral ---
+        window.onload = () => {
+            buildMenus();
+            nav('intro');
+        };
     </script>
 </body>
 </html>
